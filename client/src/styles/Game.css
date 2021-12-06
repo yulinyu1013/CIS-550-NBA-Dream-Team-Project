@@ -13,7 +13,7 @@
   grid-template-columns: 25% 75%;
 }
 
-.game-main-page >* {
+.game-main-page > * {
   border-radius: 10px;
   /* background-color: lightblue; */
 }
