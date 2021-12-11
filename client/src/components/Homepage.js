@@ -17,7 +17,15 @@ const Homepage = () => {
         </div>
         <div className="game-of-the-season-container">
           <div className ="gots-title">Editors' Pick: Game of the Season </div>
-          <div className ="gots-video"> video </div>
+          <div className ="gots-video"> 
+            <iframe className="pick-video"
+              src='https://www.youtube.com/embed/rokGy0huYEA'
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="Embedded youtube"
+            />
+          </div>
           <GameOfTheSeason />
         </div>
         <div className="top-10-container">

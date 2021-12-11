@@ -32,7 +32,14 @@
   height: 80%;
 }
 .gots-video{
-  height: 60%;
+  height: 70%;
+  width: 100%;
+  text-align:center;
+}
+
+.pick-video{
+  width: 70%;
+  height: 90%;
 }
 .gots-title, .top10-title, .team-map-title {
   width: 100%;
