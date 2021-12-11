@@ -4,9 +4,32 @@ import '../styles/Game.css'
 import { Form, FormInput, FormGroup, Button} from "shards-react";
 import {
   Slider,
+  Table,
+  Pagination,
+  Row,
+  Col,
+  Divider,
+  Select
 } from 'antd'
 
+const { Column, ColumnGroup } = Table;
+
 const Game = () => {
+
+  const data = [
+    {
+      HomeTeam:'a',
+      AwayTeam:'b',
+      HomePoints:100,
+      HomeAssists:11,
+      HomeRebounds:11,
+      AwayPoints:100,
+      AwayAssists:11,
+      AwayRebounds:11,
+      Date: "12/12/2021"
+    }
+  ];
+
   return (
     <div className="gamepage-container">
       <div className="navbar">
@@ -61,7 +84,39 @@ const Game = () => {
               </FormGroup>
             </Form>
         </div>
-        <div className="game-result-container"></div>
+
+        <div className="game-result-container">
+          <div className="fun-fact">
+            <div className="fun-fact-title">Fun Fact!</div>
+            <div className="fun-fact-content">tbd...</div>
+          </div>
+          <div className="game-output-form">
+            <Divider />
+              <Table dataSource={data}>
+              <ColumnGroup title="Team">
+                <Column title="Home Team" dataIndex="HomeTeam" key="HomeTeam" />
+                <Column title="Away Team" dataIndex="AwayTeam" key="AwayTeam" />
+              </ColumnGroup>
+              <ColumnGroup title="Points">
+                <Column title="Home Points" dataIndex="HomePoints" key="HomePoints" />
+                <Column title="Away Points" dataIndex="AwayPoints" key="AwayPoints" />
+              </ColumnGroup>
+              <ColumnGroup title="Assists">
+                <Column title="Home Assists" dataIndex="HomeAssists" key="HomeAssists" />
+                <Column title="Away Assists" dataIndex="AwayAssists" key="AwayAssists" />
+              </ColumnGroup>
+              <ColumnGroup title="Rebounds">
+                <Column title="Home Rebounds" dataIndex="HomeRebounds" key="HomeRebounds" />
+                <Column title="Away Rebounds" dataIndex="AwayRebounds" key="AwayRebounds" />
+              </ColumnGroup>
+              <Column title="Date" dataIndex="Date" key="Date"/>
+              </Table>
+          </div>
+          <div className="game-detail-vis">
+            
+          </div>
+          <div className="game-stats-home-away"></div>
+        </div>
       </div>
     </div>
   );

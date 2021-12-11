@@ -68,3 +68,33 @@
   background: rgba(252, 251, 250, 0.5);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
+
+/* Game Search output */
+.game-result-container {
+  background: rgba(252, 251, 250, 0.5);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  align-items: center;
+  overflow: auto;
+  /* text-align: center; */
+}
+.game-result-container >*{
+  background-color: gray;
+  margin: 10px 0;
+  width: 100%;
+}
+.fun-fact {
+  height: 10%;
+  text-align: center;
+}
+
+.game-output-form{
+  height: 30%;
+}
+
+.game-detail-vis{
+  height: 30%;
+}
+
+.game-stats-home-away{
+  height: 30%;
+}
