@@ -113,7 +113,8 @@ const Game = () => {
               </Table>
           </div>
           <div className="game-detail-vis">
-            
+            {/* card */}
+            {/* basic bullet plot */}
           </div>
           <div className="game-stats-home-away"></div>
         </div>
