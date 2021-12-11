@@ -13,7 +13,7 @@ const Homepage = () => {
       <div className="main-page">
         <div className="map-container">
           <div className="team-map-title">NBA Dream Team &#127936;</div>
-          <AllTimeTop10 />
+          <iframe className="team-map" frameborder="0" title="nba team map" src="https://www.google.com/maps/d/u/0/embed?mid=1UMxZd3ayMLBAtTyYGsDwjMqbNp-PKOZz&z=4" ></iframe>
         </div>
         <div className="game-of-the-season-container">
           <div className ="gots-title">Editors' Pick: Game of the Season </div>
@@ -31,9 +31,7 @@ const Homepage = () => {
         <div className="top-10-container">
           <div className="top10-title">All Time Top 10 Leaders</div>
           <div className="top10-content">
-            <div className="top10-pts"></div>
-            <div className="top10-assists"></div>
-            <div className="top10-rebounds"></div>
+            <AllTimeTop10 />
           </div>
         </div>
       </div>

@@ -1,0 +1,31 @@
+.top10-content-chart{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.top10-pts, .top10-assists, .top10-rebounds {
+  width: 30%;
+  height: 90%;
+  background: rgb(255, 255, 255);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+.top10-pts-title, .top10-assists-title, .top10-rebounds-title {
+  width: 100%;
+  height: max-content;
+  font-size: large;
+  /* margin: 0; */
+  margin: 20px 0;
+  text-align: center;
+  font-weight: bold;
+
+}
+
+.top10-pts-chart, .top10-assists-chart, .top10-rebounds-chart {
+  width: 90%;
+  height: 70%;
+  padding-bottom: 10px;
+}

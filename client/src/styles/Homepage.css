@@ -19,18 +19,22 @@
 }
 
 .main-page > * {
-  background-color: lightgray;
   margin-bottom: 30px;
   width: 100%;
+  margin-top: 20px;
 }
 
 .map-container {
   height: 60%;
+  width: 100%;
+  margin-bottom: 30px;
+  text-align:center;
 }
 
 .game-of-the-season-container{
   height: 80%;
 }
+
 .gots-video{
   height: 70%;
   width: 100%;
@@ -45,15 +49,27 @@
   width: 100%;
   height: max-content;
   text-align: center;
-  font-size: x-large;
+  font-size: xx-large;
   font-weight: bold;
+  /* margin-bottom: 30px; */
+  /* margin-top: 20px; */
 }
 
-.team-map-title{
+/* .team-map-title{
   font-size: xx-large;
+} */
+
+.team-map{
+  width: 90%;
+  height: 90%;
+  /* text-align: center; */
 }
 
 .top-10-container{
-  height: 50%;
+  height: 60%;
+  margin-top: 80px;
 }
 
+.top10-title{
+  margin-bottom: 10px;
+}
