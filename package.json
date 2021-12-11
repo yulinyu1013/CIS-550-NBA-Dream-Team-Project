@@ -1,7 +1,7 @@
 {
   "name": "cis-550-nba-dream-team-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "final project",
   "main": "server.js",
   "engines": {
     "node": "14.x"
@@ -26,5 +26,11 @@
     "testPathIgnorePatterns": [
       "client"
     ]
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.3"
   }
 }

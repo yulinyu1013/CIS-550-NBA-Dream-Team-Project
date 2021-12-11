@@ -1,21 +1,36 @@
-const lib = require('./dbOperations');
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
 
-// connect to db
-let db;
+const webapp = express();
 
-const connectToDb = async () => { db = await lib.connect(); };
+webapp.use(cors());
 
-connectToDb();
+webapp.use(express.json());
+webapp.use(
+  express.urlencoded({
+    extended: true,
+  }),
+);
 
-// Home Page
+webapp.use(express.static(path.join(__dirname, './client/build')));
 
-// Game Page
-
-// Player Page
-
-// Team Page
+const routes = require('./routes');
 
 
-module.exports = {
 
-};
+
+
+
+webapp.use((_req, res) => {
+  res.status(404);
+});
+
+
+// Start server
+const port = process.env.PORT || 8080;
+webapp.listen(port, () => {
+  console.log(`Server running on port:${port}`);
+});
+
+module.exports = webapp;
