@@ -69,32 +69,51 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* player Search output */
+/* ================= */
+/* player output */
+/* ================= */
+
 .player-result-container {
   background: rgba(252, 251, 250, 0.5);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   align-items: center;
   overflow: auto;
-  /* text-align: center; */
+  padding: 0 5%;
 }
+
 .player-result-container >*{
   background-color: gray;
   margin: 10px 0;
   width: 100%;
 }
-.fun-fact {
-  height: 10%;
-  text-align: center;
-}
 
 .player-output-form{
-  height: 30%;
+  height: 40%;
+  width: 100%;
 }
 
 .player-detail-vis{
-  height: 30%;
+  height: 40%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 
-.player-stats-home-away{
-  height: 30%;
+.player-salary-season{
+  height: 40%;
+}
+
+.player-profile{
+  height: 100%;
+  width: 20%;
+}
+
+.player-info{
+  height: 100%;
+  width: 30%;
+}
+
+.player-radar-chart{
+  height: 100%;
+  width: 40%;
 }

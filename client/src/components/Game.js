@@ -5,11 +5,8 @@ import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle} from "sh
 import {
   Slider,
   Table,
-  Pagination,
   Row,
   Col,
-  Divider,
-  Select
 } from 'antd'
 
 import { BidirectionalBar } from '@ant-design/charts';
@@ -142,7 +139,7 @@ const Game = () => {
           <div className="game-output-form">
             <div className='game-search-output-title'>Search Results</div>
             {/* <Divider /> */}
-              <Table dataSource={data1}>
+            <Table dataSource={data1}>
               <ColumnGroup title="Team">
                 <Column title="Home Team" dataIndex="HomeTeam" key="HomeTeam" />
                 <Column title="Away Team" dataIndex="AwayTeam" key="AwayTeam" />
@@ -160,7 +157,7 @@ const Game = () => {
                 <Column title="Away Rebounds" dataIndex="AwayRebounds" key="AwayRebounds" />
               </ColumnGroup>
               <Column title="Date" dataIndex="Date" key="Date"/>
-              </Table>
+            </Table>
           </div>
           <div className="game-detail-vis">
             <div className='game-detail-title'>Game Statistics</div>
