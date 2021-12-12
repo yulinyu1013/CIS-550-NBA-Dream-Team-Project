@@ -19,7 +19,7 @@ const Homepage = () => {
           <div className ="gots-title">Editors' Pick: Game of the Season </div>
           <div className ="gots-video"> 
             <iframe className="pick-video"
-              src='https://www.youtube.com/embed/rokGy0huYEA'
+              src='https://www.youtube.com/embed/48dx4fL7Q4Q'
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
