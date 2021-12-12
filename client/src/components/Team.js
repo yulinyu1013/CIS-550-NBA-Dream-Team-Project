@@ -264,7 +264,7 @@ const dualConfig = {
             <DualAxes {...dualConfig} />
           </div>
           <div className='team-player_flow_of_year'>
-
+            <div className='team-player_flow_of_year-title'>Player Flow</div>
           </div>
         </div>
       </div>

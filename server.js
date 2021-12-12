@@ -17,7 +17,17 @@ webapp.use(express.static(path.join(__dirname, './client/build')));
 
 const routes = require('./routes');
 
+// Home Page
+webapp.get('/home/game_of_the_season', routes.gameOfTheSeasonHandler);
+webapp.get('/home/nba_all_time', routes.allTimeTop10Handler);
 
+// Game Page
+webapp.get('/game/fun_fact', routes.funFactHandler);
+webapp.get('/game/search', routes.gameSearchHandler);
+webapp.get('/game/team_stats', routes.gameTeamStatsHandler);
+// Player Page
+
+// Team Page
 
 
 
