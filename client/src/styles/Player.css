@@ -128,6 +128,7 @@
 }
 .player-info-container{
   display: flex;
+  justify-content: space-between;
 }
 
 
@@ -142,6 +143,7 @@
   font-size: x-large;
   font-weight: bold;
   margin: auto;
+  text-align: center;
 }
 
 .player-info{

@@ -7,8 +7,8 @@ import {
   Table,
 } from 'antd'
 import { Radar, Line } from '@ant-design/charts';
-import { playerSearch, getPlayerNetwork, getPlayerSalary } from './fetchers';
-
+import { playerSearch, getPlayerNetwork, getPlayerSalary, getHeadShot } from './fetchers';
+import dummy from '../styles/dummy.png';
 
 const { Column } = Table;
 
@@ -35,6 +35,7 @@ const Player = () => {
   const [secondConn, setSecondConn] = useState();
   const [thirdConn, setThirdConn] = useState();
   const [salaryData, setSalaryData] = useState();
+  const [imgUrl, setImgUrl] = useState(dummy);
   
   useEffect(() =>{
     const params = { first_name, last_name, player_slug, min_salary,
@@ -69,9 +70,9 @@ const Player = () => {
     
     getPlayerNetwork(full_name).then((res) => {
       console.log(res.data);
-      setFirstConn(res.data[0].numPlayer);
-      setSecondConn(res.data[1].numPlayer);
-      setThirdConn(res.data[2].numPlayer);
+      setFirstConn(res.data[0]?  res.data[0].numPlayer: 0);
+      setSecondConn(res.data[1] ? res.data[1].numPlayer: 0);
+      setThirdConn(res.data[2] ? res.data[2].numPlayer: 0);
       })
     });
 
@@ -87,6 +88,11 @@ const Player = () => {
       const cleaned = playerS.concat(teamAvg);
       // console.log(cleaned);
       setSalaryData(cleaned);
+    });
+
+    getHeadShot(selectedPlayerId).then((res) =>{
+      console.log(res.data);
+      setImgUrl(`https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${selectedPlayerId}.png`);
     })
   },[])
 
@@ -134,6 +140,7 @@ const Player = () => {
       size: 2,
     },
     area: {},
+    color: '#c9082a'
   };
 
   const lineConfig = {
@@ -156,6 +163,7 @@ const Player = () => {
         duration: 6000,
       },
     },
+    color: ['#d62728', '#2ca02c', '#000000'],
   };
 
   return (
@@ -237,7 +245,7 @@ const Player = () => {
             <div className='player-detail-title'>Player Details</div>
             <div className='player-info-container'>
               <div className='player-profile'>
-                image
+                <img src={imgUrl}></img>
                 <div className='player-name'>{selectedDetails ? selectedDetails.full_name : ''}</div>
               </div>
               <div className='player-info'>

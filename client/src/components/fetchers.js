@@ -16,7 +16,7 @@ export const getGameTeamStats = async(teamName) => axios.get(`${baseURL}/game/te
 export const playerSearch = async(params) => axios.get(`${baseURL}/player/search`, {params: params});
 export const getPlayerNetwork =  async(name) => axios.get(`${baseURL}/player/network`, {params: {full_name: name}});
 export const getPlayerSalary = async(id) => axios.get(`${baseURL}/player/salary`, {params: {id: id}});
-
+export const getHeadShot = async(id) =>  axios.get(`https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${id}.png`);
 // Team Page
 export const teamSearch = async(params) => axios.get(`${baseURL}/team/search`, {params: params});
 export const getTeamSalaryPerWin = async(name) => axios.get(`${baseURL}/team/salary_per_win`, {params: {name: name}});
