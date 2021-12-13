@@ -33,11 +33,13 @@
 }
 
 .game-of-the-season-container{
-  height: 130%;
+  height: 140%;
+  width: 90%;
+  margin: auto;
 }
 
 .gots-video{
-  height: 70%;
+  height: 55%;
   width: 100%;
   text-align:center;
 }
@@ -74,3 +76,122 @@
 .top10-title{
   margin-bottom: 10px;
 }
+
+/* flip logo */
+
+.flip-box {
+  background-color: transparent;
+  width: 127px;
+  height: 127px;
+  border: 1px solid #f1f1f1;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-box-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-box:hover .flip-box-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-box-front, .flip-box-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-box-front {
+  background-color: #bbb;
+  color: black;
+}
+
+/* Style the back side */
+.flip-box-back {
+  background-color: #C9082A;
+  color: white;
+  transform: rotateY(180deg);
+}
+.flip-box-back > h2{
+  padding: 40% 0;
+  vertical-align: middle;
+  height: 100%;
+  margin: auto;
+  color: white;
+}
+
+.flip-box-back, .flip-box-back-lal > h2{
+  /* padding: 40% 0; */
+  vertical-align: middle;
+  height: 100%;
+  margin: auto;
+  color: white;
+}
+
+
+/* LAL */
+.flip-box-lal {
+  margin: 0;
+  background-color: transparent;
+  width: 125px;
+  height: 125px;
+  border: 1px solid #f1f1f1;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-box-inner-lal {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-box-lal:hover .flip-box-inner-lal {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-box-front-lal, .flip-box-back-lal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-box-front-lal {
+  background-color: #bbb;
+  color: black;
+}
+
+/* Style the back side */
+.flip-box-back-lal {
+  background-color: #17408B;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.flip-box-back-lal > h2{
+  padding: 40% 0;
+  vertical-align: middle;
+  height: 100%;
+  margin: auto;
+  color: white;
+}
+

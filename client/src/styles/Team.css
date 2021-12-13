@@ -94,10 +94,6 @@
   width: 100%;
 }
 
-.team-player_flow_of_year{
-  /* height: 60%;
-  width: 100%; */
-}
 
 .team-player_flow_of_year:nth-child(2) > canvas {
   width: min-content;
