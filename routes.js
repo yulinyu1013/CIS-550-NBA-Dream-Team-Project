@@ -64,7 +64,7 @@ const gameSearchHandler = async(req, res) => {
     pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
     pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
   };
-  console.log(params);
+  // console.log(params);
   try {
     const results = await lib.gameSearch(db,params);
     res.status(200).json(results);
@@ -84,8 +84,74 @@ const gameTeamStatsHandler = async(req, res) => {
 }
 
 // Player Page
+const playerSearchHandler = async(req, res) => { 
+  const first_name = req.query.first_name ? req.query.first_name : "";
+  const last_name = req.query.last_name ? req.query.last_name : "";
+  const player_slug = req.query.player_slug ? req.query.player_slug : "";
+  const min_salary = req.query.min_salary ? Math.max(0,req.query.min_salary) : 0;
+  const pts_low = req.query.pts_low ? req.query.pts_low : 0;
+  const pts_high = req.query.pts_high? req.query.pts_high : 50;
+  const reb_low = req.query.reb_low ? req.query.reb_low : 0;
+  const reb_high = req.query.reb_high? req.query.reb_high : 30;
+  const ast_low = req.query.ast_low ? req.query.ast_low : 0;
+  const ast_high = req.query.ast_high? req.query.ast_high : 30;
+  const position = req.query.position==='All' ? '' : req.query.position;
+  
+  const params = {first_name, last_name, player_slug, min_salary, pts_low, pts_high, reb_low, reb_high, ast_low, ast_high, position};
+
+  // console.log(params);
+  try {
+    const results = await lib.playerSearch(db,params);
+    res.status(200).json(results);
+  } catch (err) {
+    res.status(404).json({ error: err.message });
+  }
+}
+
+const playNetworkHandler = async(req, res) => { 
+  const {full_name} = req.query;
+  const cleaned = full_name.split('%20')[0] + ' ' + full_name.split('%20')[1];
+  console.log(cleaned);
+  try {
+    const result = await lib.playerNetwork(db, cleaned);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(404).json({ error: 'not found' });
+  }
+}
+
+const playerSalaryPerSeasonHandler = async(req, res) => {
+  try {
+    const result = await lib.playerSalaryPerSeason(db, req.query.id);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(404).json({ error: 'not found' });
+  }
+}
 
 // Team Page
+const teamSearchHandler = async(req, res) => {
+  const name = req.query.name ? req.query.name : "";
+  const year_founded_min = req.query.year_founded_min ? req.query.year_founded_min : 1960;
+  const year_founded_max = req.query.year_founded_max ? req.query.year_founded_max : 2021;
+  const state = req.query.state ? req.query.state : "";
+  const city = req.query.city ? req.query.city : "";
+  const arena = req.query.arena ? req.query.arena : "";
+  const owner = req.query.owner ? req.query.owner : "";
+
+  const params = {name,year_founded_min,year_founded_max,state,city,arena,owner};
+  console.log(params);
+  try {
+    const results = await lib.teamSearch(db,params);
+    res.status(200).json(results);
+  } catch (err) {
+    res.status(404).json({ error: err.message });
+  }
+
+}
+
+
+
 
 
 module.exports = {
@@ -93,5 +159,9 @@ module.exports = {
   allTimeTop10Handler,
   funFactHandler,
   gameSearchHandler,
-  gameTeamStatsHandler
+  gameTeamStatsHandler,
+  playerSearchHandler,
+  playNetworkHandler,
+  playerSalaryPerSeasonHandler,
+  teamSearchHandler,
 };

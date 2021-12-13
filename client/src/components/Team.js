@@ -6,6 +6,7 @@ import {
   Table,
 } from 'antd'
 import { BidirectionalBar, DualAxes } from '@ant-design/charts';
+import { teamSearch } from './fetchers';
 
 const { Column } = Table;
 
@@ -182,11 +183,10 @@ const dualConfig = {
   yField: ['win_count', 'salary_per_win'],
   limitInPlot: false,
   padding: [10, 20, 80, 30],
-  // 需要设置底部 padding 值，同 css
   slider: {},
   meta: {
     season: {
-      sync: false, // 开启之后 slider 无法重绘
+      sync: false, 
     },
   },
   geometryOptions: [

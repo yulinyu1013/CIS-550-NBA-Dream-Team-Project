@@ -10,7 +10,6 @@ import {
 } from 'antd'
 import { BidirectionalBar } from '@ant-design/charts';
 import { getFunFact, gameSearch, getGameTeamStats } from './fetchers';
-import { set } from '../../../server';
 
 const { Column, ColumnGroup } = Table;
 
@@ -61,70 +60,70 @@ const Game = () => {
       setSelectedDetials(res.data.filter(a => a.game_id===parseInt(selectedGameId))[0]);
     });
 
-    // getGameTeamStats(homeTeam).then((res)=>{
-    //   console.log(res.data);
-    //   const dataHome = [
-    //     {
-    //       value: '#Games (Hundreds)',
-    //       'Home': res.data[0].count,
-    //       'Away': res.data[1].count,
-    //     },
-    //     {
-    //       value: '#Winning Games (Hundreds)',
-    //       'Home': res.data[0].win,
-    //       'Away': res.data[1].win,
-    //     },
-    //     {
-    //       value: '#Losing Games (Hundreds)',
-    //       'Home': res.data[0].lost,
-    //       'Away': res.data[1].lost,
-    //     },
-    //     {
-    //       value: 'Average Winning Points',
-    //       'Home': parseFloat(res.data[0].avg_win_pts),
-    //       'Away': parseFloat(res.data[1].avg_win_pts),
-    //     },
-    //     {
-    //       value: 'Average Losing Points',
-    //       'Home': -parseFloat(res.data[0].avg_lost_pts),
-    //       'Away': -parseFloat(res.data[1].avg_lost_pts),
-    //     },
-    //   ];
-    //   setHomeTeamStats(dataHome);
+    getGameTeamStats(homeTeam).then((res)=>{
+      console.log(res.data);
+      const dataHome = [
+        {
+          value: '#Games (Hundreds)',
+          'Home': res.data[0].count/100,
+          'Away': res.data[1].count/100,
+        },
+        {
+          value: '#Winning Games (Hundreds)',
+          'Home': res.data[0].win/100,
+          'Away': res.data[1].win/100,
+        },
+        {
+          value: '#Losing Games (Hundreds)',
+          'Home': res.data[0].lost/100,
+          'Away': res.data[1].lost/100,
+        },
+        {
+          value: 'Average Winning Points',
+          'Home': parseFloat(res.data[0].avg_win_pts),
+          'Away': parseFloat(res.data[1].avg_win_pts),
+        },
+        {
+          value: 'Average Losing Points',
+          'Home': -parseFloat(res.data[0].avg_lost_pts),
+          'Away': -parseFloat(res.data[1].avg_lost_pts),
+        },
+      ];
+      setHomeTeamStats(dataHome);
 
-    // })
+    })
 
-    // getGameTeamStats(awayTeam).then((res)=>{
-    //   console.log(res.data);
-    //   const dataAway = [
-    //     {
-    //       value: '#Games (Hundreds)',
-    //       'Home': res.data[0].count,
-    //       'Away': res.data[1].count,
-    //     },
-    //     {
-    //       value: '#Winning Games (Hundreds)',
-    //       'Home': res.data[0].win,
-    //       'Away': res.data[1].win,
-    //     },
-    //     {
-    //       value: '#Losing Games (Hundreds)',
-    //       'Home': res.data[0].lost,
-    //       'Away': res.data[1].lost,
-    //     },
-    //     {
-    //       value: 'Average Winning Points',
-    //       'Home': parseFloat(res.data[0].avg_win_pts),
-    //       'Away': parseFloat(res.data[1].avg_win_pts),
-    //     },
-    //     {
-    //       value: 'Average Losing Points',
-    //       'Home': -parseFloat(res.data[0].avg_lost_pts),
-    //       'Away': -parseFloat(res.data[1].avg_lost_pts),
-    //     },
-    //   ];
-    //   setAwayTeamStats(dataAway);
-    // })
+    getGameTeamStats(awayTeam).then((res)=>{
+      console.log(res.data);
+      const dataAway = [
+        {
+          value: '#Games (Hundreds)',
+          'Home': res.data[0].count/100,
+          'Away': res.data[1].count/100,
+        },
+        {
+          value: '#Winning Games (Hundreds)',
+          'Home': res.data[0].win/100,
+          'Away': res.data[1].win/100,
+        },
+        {
+          value: '#Losing Games (Hundreds)',
+          'Home': res.data[0].lost/100,
+          'Away': res.data[1].lost/100,
+        },
+        {
+          value: 'Average Winning Points',
+          'Home': parseFloat(res.data[0].avg_win_pts),
+          'Away': parseFloat(res.data[1].avg_win_pts),
+        },
+        {
+          value: 'Average Losing Points',
+          'Home': -parseFloat(res.data[0].avg_lost_pts),
+          'Away': -parseFloat(res.data[1].avg_lost_pts),
+        },
+      ];
+      setAwayTeamStats(dataAway);
+    })
 
   },[])
 
@@ -373,11 +372,11 @@ const Game = () => {
             <div className='game-teams-history-title'>Performance History of Teams</div>
             <div className='game-teams-history-chart'>
               <div className="curr-home">
-                Home
+                { selectedDetails ? selectedDetails.team_name_home: 'Home'}
                 <BidirectionalBar {...config(homeTeamStats)} />
               </div>
               <div className='curr-away'>
-                Away
+                {selectedDetails ? selectedDetails.team_name_away : 'Away'}
                 <BidirectionalBar {...config(awayTeamStats)} />
               </div>
             </div>

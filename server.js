@@ -25,10 +25,14 @@ webapp.get('/home/nba_all_time', routes.allTimeTop10Handler);
 webapp.get('/game/fun_fact', routes.funFactHandler);
 webapp.get('/game/search', routes.gameSearchHandler);
 webapp.get('/game/team_stats', routes.gameTeamStatsHandler);
+
 // Player Page
+webapp.get('/player/search', routes.playerSearchHandler);
+webapp.get('/player/network', routes.playNetworkHandler);
+webapp.get('/player/salary', routes.playerSalaryPerSeasonHandler);
 
 // Team Page
-
+webapp.get('/team/search', routes.teamSearchHandler);
 
 
 

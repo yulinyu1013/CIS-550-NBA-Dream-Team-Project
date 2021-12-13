@@ -126,7 +126,7 @@ const allTimeTop10 = async(db) => {
 
 
  const gameSearch = async(db, params) =>{
-  console.log('connect to db...');
+  // console.log('connect to db...');
    const query = `
    SELECT game_id, team_abbreviation_home, team_name_home, game_date, season, 
    pts_home, reb_home, ast_home, fgm_home, ftm_home, fta_home, ft_pct_home, pf_home, 
@@ -178,9 +178,132 @@ const gameTeamStats = async(db, name) =>{
     throw new Error('Error executing the query');
   }
 }
+
 // Player Page
+const playerSearch = async(db, params) => {
+  const query = `
+        SELECT P.id AS player_id, full_name, player_slug, birth_date, school, country, last_affiliation, height, weight, season_exp, jersey, position, roster_status, games_played_current_season_flag, team_id, player_code, from_year, to_year, draft_year, draft_round, draft_number, 
+        ROUND(pts,3) AS pts, ROUND(ast,3) AS ast, ROUND(reb,3) AS reb, all_star_appearances, salary
+        FROM Player P
+            JOIN (SELECT id, MAX(amountSalary) AS salary
+                  FROM Player_Bios
+                  WHERE nameTable = 'Salaries'
+                  GROUP BY id) S ON P.id = S.id
+        WHERE full_name LIKE '${params.first_name}%' AND full_name LIKE '%${params.last_name}' AND
+              player_slug LIKE '%${params.player_slug}%' AND
+              salary >= ${params.min_salary}  AND
+              pts >= ${params.pts_low} AND pts <= ${params.pts_high} AND
+              reb >= ${params.reb_low} AND reb <= ${params.reb_high} AND
+              ast >= ${params.ast_low} AND ast <= ${params.ast_high} AND
+              position LIKE '%${params.position}%';
+                `;
+  try {
+    const [rows] = await db.execute(query);
+    return rows;
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+    throw new Error('Error executing the query');
+  }
+}
+
+const playerNetwork = async(db, name) =>{
+  const query = `
+                  WITH FIRST_TEAM(team_id, team_name) AS
+                  (SELECT P.team_id, T.full_name AS team_name
+                  FROM Player P JOIN Team T ON P.team_id = T.id
+                  WHERE P.full_name = '${name}'),
+                FIRST_TEAMMATE(full_name, team_id, connection) AS
+                  (SELECT P.full_name, P.team_id, 1
+                  FROM Player P JOIN FIRST_TEAM FT ON P.team_id = FT.team_id
+                  WHERE P.full_name != '${name}'),
+                SECOND_TEAM(team_id, team_name) AS
+                  (SELECT P.team_id, T.full_name AS team_name
+                  FROM Player P JOIN Team T ON P.team_id = T.id
+                  WHERE P.full_name IN (SELECT full_name FROM FIRST_TEAMMATE)),
+                SECOND_TEAMMATE(full_name, team_id, connection) AS
+                  (SELECT P.full_name, P.team_id, 2
+                  FROM Player P JOIN SECOND_TEAM ST ON P.team_id = ST.team_id
+                  WHERE P.full_name != '${name}' AND
+                        P.full_name NOT IN (SELECT full_name FROM FIRST_TEAMMATE)),
+                THIRD_TEAM(team_id, team_name) AS
+                  (SELECT P.team_id, T.full_name AS team_name
+                  FROM Player P JOIN Team T ON P.team_id = T.id
+                  WHERE P.full_name IN (SELECT full_name FROM SECOND_TEAMMATE)),
+                THIRD_TEAMMATE(full_name, team_id, connection) AS
+                  (SELECT P.full_name, P.team_id, 3
+                  FROM Player P JOIN THIRD_TEAM TT ON P.team_id = TT.team_id
+                  WHERE P.full_name != '${name}' AND
+                        P.full_name NOT IN (SELECT full_name FROM FIRST_TEAMMATE) AND
+                        P.full_name NOT IN (SELECT full_name FROM SECOND_TEAMMATE))
+                SELECT connection, COUNT(full_name) AS numPlayer
+                FROM FIRST_TEAMMATE
+                GROUP BY connection
+                UNION
+                SELECT connection, COUNT(full_name) AS numPlayer
+                FROM SECOND_TEAMMATE
+                GROUP BY connection
+                UNION
+                SELECT connection, COUNT(full_name) AS numPlayer
+                FROM THIRD_TEAMMATE TT
+                GROUP BY connection;
+                `;
+  try {
+    const [rows] = await db.execute(query);
+    return rows;
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+    throw new Error('Error executing the query');
+  }
+}
+
+
+const playerSalaryPerSeason = async(db, id) => {
+  const query =`
+              SELECT * FROM
+              (SELECT id, namePlayerBREF AS 'namePlayer', player.nameTeam AS 'nameTeam', player.slugSeason AS slugSeason, salaryFromPlayer, salaryAcrossTeam,
+              if(salaryFromPlayer > salaryAcrossTeam, 1, 0) AS valuedPlayer
+              FROM (SELECT id, namePlayerBREF, nameTeam, slugSeason, SUM(amountSalary) as 'salaryFromPlayer'
+                    FROM Player_Bios
+                    WHERE nameTable = 'Salaries'
+                    GROUP BY id, namePlayerBREF, slugSeason, nameTeam
+                    ORDER BY id, slugSeason) AS player
+              JOIN (SELECT slugSeason, nameTeam, AVG(amountSalary) as 'salaryAcrossTeam'
+                    FROM Player_Bios
+                    GROUP BY slugSeason, nameTeam) AS team
+              ON player.slugSeason = team.slugSeason AND player.nameTeam = team.nameTeam) t
+              WHERE id = ${id};
+              `;
+  try {
+    const [rows] = await db.execute(query);
+    return rows;
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+    throw new Error('Error executing the query');
+  }
+}
 
 // Team Page
+const teamSearch = async(db, params) =>{
+  const query = `
+              SELECT full_name, abbreviation, nickname, city, state, year_founded, arena, owner, d_league_affiliation
+              FROM Team
+              WHERE (abbreviation = '${params.name}' OR full_name LIKE '%${params.name}%') AND
+                    year_founded >= ${params.year_founded_min} AND year_founded <= ${params.year_founded_max} AND
+                    city LIKE '%${params.city}%' AND
+                    state LIKE '%${params.state}%' AND
+                    arena LIKE '%${params.arena}%' AND
+                    owner LIKE '%${params.owner}%';
+                `;
+  try {
+    const [rows] = await db.execute(query);
+    return rows;
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+    throw new Error('Error executing the query');
+  }
+}
+
+
 
 
 module.exports = {
@@ -189,6 +312,9 @@ module.exports = {
   allTimeTop10,
   funFact,
   gameSearch,
-  gameTeamStats
-
+  gameTeamStats,
+  playerSearch,
+  playerNetwork,
+  playerSalaryPerSeason,
+  teamSearch,
 };
