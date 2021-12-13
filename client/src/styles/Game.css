@@ -58,7 +58,7 @@
 }
 
 .game-search-title{
-  font-size: x-large;
+  font-size: xx-large;
   font-weight: bold;
   margin-left: 20px;
   margin-top: 20px;
@@ -69,6 +69,10 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
+.game-search-field label{
+  font-weight:500;
+  font-size: 15px;
+}
 
 /* ===================== */
 /* Game Search output */
@@ -87,16 +91,51 @@
   width: 100%;
 }
 .fun-fact {
-  height: 10%;
-  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  height: 20%;
+  /* text-align: center; */
+  background: rgba(252, 251, 250, 0.5);
+  box-shadow: #17408B 0px 0px 0px 2px inset, rgb(255, 255, 255) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(255, 255, 255) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(255, 255, 255) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px, #C9082A 40px -40px;
+  padding: 5px 15px;
+  display: flex;
 }
 
-/* .game-output-form{
-  height: 40%;
-} */
+.fun-fact-title{
+  text-decoration: underline wavy rgb(51, 95, 172);
+  font-weight: 400;
+  width: 100%;
+  margin: auto;
+}
+.fun-fact-content{
+  font-size: 18px;
+  margin: auto;
+}
+
+.fun-fact-content .fun-lal{
+  color: #552583;
+  font-weight: bold;
+}
+
+.fun-fact-content .fun-lac{
+  color: #1D428A;
+  font-weight: bold;
+}
+
+
+.game-row-even{
+  font-weight: 400;
+}
+
+.game-row-odd{
+  /* background-color: #e39ca9; */
+  background-color: #8099d012;
+  font-weight: 400;
+}
+
 
 .game-detail-vis{
-  height: 50%;
+  height: 65%;
 }
 
 .game-stats-home-away{
@@ -108,6 +147,7 @@
   width: 100%;
   font-size: xx-large;
   margin-left: 10px;
+  font-weight: 400;
 }
 
 .game-teams-history-chart{
@@ -122,4 +162,15 @@
   text-align: center;
   font-size: large;
 }
+.game-teams-history-title{
+  margin-bottom: 20px;
+}
 
+.game-output-form .ant-table-thead > tr >th{
+  color: white;
+  background: #4468ab !important;
+}
+
+.game-detail-vis img{
+  background-image: url('./dummyTeam.png');
+}

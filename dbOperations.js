@@ -135,7 +135,7 @@ const allTimeTop10 = async(db) => {
     FROM Game
     WHERE (team_abbreviation_home = '${params.home}' OR team_name_home LIKE '%${params.home}%') AND
       (team_abbreviation_away = '${params.away}' OR team_name_away LIKE '%${params.away}%') AND
-      game_date LIKE '%${params.date}%' AND
+      game_date >= '${params.min_date}' AND game_date <= '${params.max_date}' AND
       pts_home >= ${params.pts_home_low} AND pts_home <= ${params.pts_home_high} AND
       pts_away >= ${params.pts_away_low} AND pts_away <= ${params.pts_away_high} AND
       reb_home >= ${params.reb_home_low} AND reb_home <= ${params.reb_home_high} AND

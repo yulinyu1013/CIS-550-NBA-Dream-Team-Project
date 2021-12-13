@@ -44,7 +44,8 @@ const gameSearchHandler = async(req, res) => {
   console.log(req.url);
   const home = req.query.home ? req.query.home : "";
   const away = req.query.away ? req.query.away : "";
-  const date = req.query.date ? req.query.date : "";
+  const min_date = req.query.min_date ? req.query.min_date : "1946-11-26";
+  const max_date = req.query.max_date ? req.query.max_date : "2021-05-16";
 
   const pts_home_low = req.query.pts_home_low ? req.query.pts_home_low : 0;
   const pts_home_high = req.query.pts_home_high? req.query.pts_home_high : 200;
@@ -60,11 +61,11 @@ const gameSearchHandler = async(req, res) => {
   const ast_away_low = req.query.ast_away_low ? req.query.ast_away_low : 0;
   const ast_away_high = req.query.ast_away_high? req.query.ast_away_high : 100;
   
-  const params ={home,away,date,
+  const params ={home,away,min_date, max_date,
     pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
     pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
   };
-  // console.log(params);
+  console.log(params);
   try {
     const results = await lib.gameSearch(db,params);
     res.status(200).json(results);

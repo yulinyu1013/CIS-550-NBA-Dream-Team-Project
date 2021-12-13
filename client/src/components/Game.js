@@ -7,6 +7,7 @@ import {
   Table,
   Row,
   Col,
+  Divider,
 } from 'antd'
 import { BidirectionalBar } from '@ant-design/charts';
 import { getFunFact, gameSearch, getGameTeamStats } from './fetchers';
@@ -19,7 +20,8 @@ const Game = () => {
   // game search
   const [home, setHome] = useState();
   const [away, setAway] = useState();
-  const [date, setDate] = useState();
+  const [min_date, set_min_date] = useState();
+  const [max_date, set_max_date] = useState();
 
   const [pts_home_low, set_pts_home_low] = useState(); 
   const [pts_home_high, set_pts_home_high] = useState(); 
@@ -49,7 +51,7 @@ const Game = () => {
     getFunFact().then((res) => {
       setFunfact(res.data);
     });
-    const params ={home,away,date,
+    const params ={home,away,min_date,max_date,
       pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
       pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
     };
@@ -130,7 +132,7 @@ const Game = () => {
 
   const submitSearch = (e) => {
     e.preventDefault();
-    const params ={home,away,date,
+    const params ={home,away,min_date,max_date,
       pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
       pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
     };
@@ -149,7 +151,7 @@ const Game = () => {
 
   const config = (data) => {
     return {
-    data: data,
+    data: data?data:[],
     xField: 'value',
     xAxis: {
       position: 'bottom',
@@ -159,12 +161,13 @@ const Game = () => {
         type: 'active-region',
       },
     ],
-    yField: ['Home', 'Away'],
+    yField: data ? ['Home', 'Away'] : ['Home', 'Away'],
     tooltip: {
       shared: true,
       showMarkers: false,
     },
-    color: ['#C9082A','#17408B']
+    color: ['#C9082A','#17408B'],
+    legend: false,
   }};
 
   return (
@@ -185,10 +188,13 @@ const Game = () => {
                   <FormInput placeholder="Away Team" value={away} onChange={(e) => setAway(e.target.value)}/>
               </FormGroup>
               <FormGroup style={{ width: '20vw', margin: '10px auto' }}>
-                  <label>Date</label>
-                  <FormInput type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+                  <label>Min Date</label>
+                  <FormInput type="date" value={min_date} onChange={(e) => set_min_date(e.target.value)} />
               </FormGroup>
-
+              <FormGroup style={{ width: '20vw', margin: '10px auto' }}>
+                  <label>Max Date</label>
+                  <FormInput type="date" value={max_date} onChange={(e) => set_max_date(e.target.value)} />
+              </FormGroup>
               <FormGroup style={{ width: '20vw', margin: '10px auto' }}>
                   <label>Home Points</label>
                   <Slider max={200} range defaultValue={[0, 200]} onChange={(value) => {set_pts_home_low(value[0]); set_pts_home_high(value[1])}}/>
@@ -225,19 +231,22 @@ const Game = () => {
         <div className="game-result-container">
           <div className="fun-fact">
             <div className="fun-fact-title">Fun Fact!</div>
+            <br/>
             <div className="fun-fact-content">
-              The home team {funfact.home_team}, 
-              which was founded in {funfact.home_team_found} won {funfact.home_win} out of {funfact.total_match} matches against {funfact.away_team}, 
-              which was founded in {funfact.away_team_found}. 
-              The most valuable player in {funfact.home_team} history is {funfact.home_mvp} who earned ${funfact.home_mvp_salary} for a season 
-              while the most valuable player in {funfact.away_team} history is {funfact.away_mvp} who earned ${funfact.away_mvp_salary} for a season.
+              The home team <span className='fun-lal'>{funfact.home_team}</span>, 
+              which was founded in {funfact.home_team_founded} won <span className='fun-lal'>{funfact.home_win}</span> out of <span className='fun-lal'>{funfact.total_match}</span> matches against <span className='fun-lac'>{funfact.away_team}</span>, 
+              which was founded in {funfact.away_team_founded}. 
+              The most valuable player in <span className='fun-lal'>{funfact.home_team} </span> history is <span className='fun-lal'>{funfact.home_mvp}</span> who earned <span className='fun-lal'>${funfact.home_mvp_salary}</span> for a season 
+              while the most valuable player in <span className='fun-lac'>{funfact.away_team} </span>history is <span className='fun-lac'>{funfact.away_mvp}</span> who earned <span className='fun-lac'>${funfact.away_mvp_salary}</span> for a season.
             </div>
           </div>
           <div className="game-output-form">
             <div className='game-search-output-title'>Search Results</div>
             {/* <Divider /> */}
             <Table dataSource={result} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}
-            onRow={(record, rowIndex) => { return {onClick: e => {getGameDetails(record)},};}}
+            onRow={(record, rowIndex) => { 
+              return {onClick: e => {getGameDetails(record)}};}}
+            rowClassName={(record, rowIndex) => (rowIndex % 2 === 0 ? 'game-row-even' : 'game-row-odd')}
             >
               <ColumnGroup title="Team">
                 <Column title="Home Team" dataIndex="team_name_home" key="team_name_home" sorter= {(a, b) => a.team_name_home.localeCompare(b.team_name_home)}/>
@@ -266,13 +275,13 @@ const Game = () => {
               <CardBody>
                   <Row gutter='30' align='middle' justify='center'>
                       <Col flex={2} style={{ textAlign: 'left' }}>
-                        <CardTitle>Home(logo)</CardTitle>
+                        <CardTitle><img width='125' height='125' src={`https://d2p3bygnnzw9w3.cloudfront.net/req/202112021/tlogo/bbr/${selectedDetails.team_abbreviation_home}.png`} alt=''/></CardTitle>
                       </Col>
                       <Col flex={2} style={{ textAlign: 'center' }}>
-                          VS
+                        <h4>{selectedDetails.game_date.substring(0,10)}</h4>
                       </Col>
                       <Col flex={2} style={{ textAlign: 'right' }}>
-                          <CardTitle>Away(logo)</CardTitle>
+                          <CardTitle><img width='125' height='125' src={`https://d2p3bygnnzw9w3.cloudfront.net/req/202112021/tlogo/bbr/${selectedDetails.team_abbreviation_away}.png`} alt=''/></CardTitle>
                       </Col>
                   </Row>
                   <Row gutter='30' align='middle' justify='center'>
@@ -280,44 +289,45 @@ const Game = () => {
                         <CardTitle>{selectedDetails.team_name_home}</CardTitle>
                       </Col>
                       <Col flex={2} style={{ textAlign: 'center' }}>
-                          {selectedDetails.game_date}
+                          
                       </Col>
                       <Col flex={2} style={{ textAlign: 'right' }}>
                         <CardTitle>{selectedDetails.team_name_away}</CardTitle>
                       </Col>
                   </Row>
+                  <Divider/>
                   <Row gutter='30' align='middle' justify='center'>
                       <Col span={9} style={{ textAlign: 'left' }}>
-                          <h6>{selectedDetails.pts_home}</h6>
+                          <h5>{selectedDetails.pts_home}</h5>
                       </Col >
                       <Col span={6} style={{ textAlign: 'center' }}>
-                          Points
+                          <h5>Points</h5>
                       </Col >
                       <Col span={9} style={{ textAlign: 'right' }}>
-                          <h6>{selectedDetails.pts_away}</h6>
+                          <h5>{selectedDetails.pts_away}</h5>
                       </Col >
             
                   </Row>
                   <Row gutter='30' align='middle' justify='center'>
                       <Col span={9} style={{ textAlign: 'left' }}>
-                          <h6>{selectedDetails.reb_home}</h6>
+                          <h5>{selectedDetails.reb_home}</h5>
                       </Col >
                       <Col span={6} style={{ textAlign: 'center' }}>
-                          Rebounds
+                          <h5>Rebounds</h5>
                       </Col >
                       <Col span={9} style={{ textAlign: 'right' }}>
-                          <h6>{selectedDetails.reb_away}</h6>
+                          <h5>{selectedDetails.reb_away}</h5>
                       </Col >
                   </Row>
                   <Row gutter='30' align='middle' justify='center'>
                       <Col span={9} style={{ textAlign: 'left' }}>
-                          <h6>{selectedDetails.ast_home}</h6>
+                          <h5>{selectedDetails.ast_home}</h5>
                       </Col >
                       <Col span={6} style={{ textAlign: 'center' }}>
-                          Assists
+                          <h5>Assists</h5>
                       </Col >
                       <Col span={9} style={{ textAlign: 'right' }}>
-                          <h6>{selectedDetails.ast_away}</h6>
+                          <h5>{selectedDetails.ast_away}</h5>
                       </Col >
                   </Row>
                   <Row gutter='30' align='middle' justify='center'>
@@ -325,7 +335,7 @@ const Game = () => {
                           <h6>{selectedDetails.fgm_home}</h6>
                       </Col >
                       <Col span={6} style={{ textAlign: 'center' }}>
-                          Field Goals Made
+                          <h6>Field Goals Made</h6>
                       </Col >
                       <Col span={9} style={{ textAlign: 'right' }}>
                           <h6>{selectedDetails.fgm_home}</h6>
@@ -336,7 +346,7 @@ const Game = () => {
                           <h6>{selectedDetails.ftm_home}</h6>
                       </Col >
                       <Col span={6} style={{ textAlign: 'center' }}>
-                          Free Throw Made
+                          <h6>Free Throw Made</h6>
                       </Col >
                       <Col span={9} style={{ textAlign: 'right' }}>
                           <h6>{selectedDetails.ftm_away}</h6>
@@ -347,7 +357,7 @@ const Game = () => {
                           <h6>{selectedDetails.fta_home}</h6>
                       </Col >
                       <Col span={6} style={{ textAlign: 'center' }}>
-                          Free Throw Attempted
+                          <h6>Free Throw Attempted</h6>
                       </Col >
                       <Col span={9} style={{ textAlign: 'right' }}>
                           <h6>{selectedDetails.fta_away}</h6>
@@ -358,7 +368,7 @@ const Game = () => {
                           <h6>{selectedDetails.pf_home}</h6>
                       </Col >
                       <Col span={6} style={{ textAlign: 'center' }}>
-                          Personal Foul
+                          <h6>Personal Foul</h6>
                       </Col >
                       <Col span={9} style={{ textAlign: 'right' }}>
                           <h6>{selectedDetails.pf_away}</h6>
@@ -369,14 +379,14 @@ const Game = () => {
             : null}
           </div>
           <div className="game-stats-home-away">
-            <div className='game-teams-history-title'>Performance History of Teams</div>
+            <div className='game-teams-history-title'>Performance History of Teams (As Home VS As Away)</div>
             <div className='game-teams-history-chart'>
               <div className="curr-home">
-                { selectedDetails ? selectedDetails.team_name_home: 'Home'}
+                <h5>{ selectedDetails ? selectedDetails.team_name_home: 'Home'}</h5>
                 <BidirectionalBar {...config(homeTeamStats)} />
               </div>
               <div className='curr-away'>
-                {selectedDetails ? selectedDetails.team_name_away : 'Away'}
+                <h5>{selectedDetails ? selectedDetails.team_name_away : 'Away'}</h5>
                 <BidirectionalBar {...config(awayTeamStats)} />
               </div>
             </div>

@@ -182,7 +182,7 @@ const Player = () => {
 
               <FormGroup style={{ width: '20vw', margin: '10px auto' }}>
                   <label>Minimum Salary</label>
-                  <FormInput placeholder="Salary" value={min_salary} onChange={(e) => set_min_salary(e.target.value)} />
+                  <FormInput type='number' placeholder="Salary" value={min_salary} onChange={(e) => set_min_salary(e.target.value)} />
               </FormGroup>
               <FormGroup style={{ width: '20vw', margin: '10px auto' }}>
                   <label>Points</label>
@@ -222,6 +222,7 @@ const Player = () => {
             <div className='player-search-output-title'>Search Results</div>
             <Table dataSource={result} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}
             onRow={(record, rowIndex) => { return {onClick: e => {getPlayerDetails(record)},};}}
+            rowClassName={(record, rowIndex) => (rowIndex % 2 === 0 ? 'player-row-even' : 'player-row-odd')}
             >
               <Column title="Name" dataIndex="full_name" key="full_name" />
               <Column title="Slug" dataIndex="player_slug" key="player_slug"/>
@@ -234,25 +235,27 @@ const Player = () => {
           </div>
           <div className='player-detail-vis'>
             <div className='player-detail-title'>Player Details</div>
-            <div className='player-profile'>
-              image
-              <div className='player-name'>{selectedDetails ? selectedDetails.full_name : ''}</div>
-            </div>
-            <div className='player-info'>
-              <div className='player-team'>Team: {selectedDetails ? selectedDetails.last_affiliation : ''}</div>
-              <div className='player-position'>Position: {selectedDetails ? selectedDetails.position : ''}</div>
-              <div className='player-height'>Height: {selectedDetails ? selectedDetails.height : ''}</div>
-              <div className='player-weight'>Weight: {selectedDetails ? selectedDetails.weight : ''}</div>
-              <div className='player-prior-school'>Prior School: {selectedDetails ? selectedDetails.school : ''}</div>
-              <div className='player-from-to-year'>Seasons: {selectedDetails ? selectedDetails.from_year : ''}-{selectedDetails ? selectedDetails.to_year : ''}</div>
-              <div className='player-jersey'>Jersey:{selectedDetails ? selectedDetails.jersey : ''}</div>
-              <div className='player-all-star'>All Star Appearance: {selectedDetails ? selectedDetails.all_star_appearances : ''}</div>
-              <div className='player-1-conn'>#First Teammates: {firstConn ? firstConn : 0}</div>
-              <div className='player-2-conn'>#Second Teammates: {secondConn ? secondConn : 0}</div>
-              <div className='player-3-conn'>#Third Teammates: {thirdConn ? thirdConn : 0}</div>
-            </div>
-            <div className='player-radar-chart'>
-              <Radar {...radarConfig} />
+            <div className='player-info-container'>
+              <div className='player-profile'>
+                image
+                <div className='player-name'>{selectedDetails ? selectedDetails.full_name : ''}</div>
+              </div>
+              <div className='player-info'>
+                <div className='player-team'>Team: {selectedDetails ? selectedDetails.last_affiliation : ''}</div>
+                <div className='player-position'>Position: {selectedDetails ? selectedDetails.position : ''}</div>
+                <div className='player-height'>Height: {selectedDetails ? selectedDetails.height : ''}</div>
+                <div className='player-weight'>Weight: {selectedDetails ? selectedDetails.weight : ''}</div>
+                <div className='player-prior-school'>Prior School: {selectedDetails ? selectedDetails.school : ''}</div>
+                <div className='player-from-to-year'>Seasons: {selectedDetails ? selectedDetails.from_year : ''}-{selectedDetails ? selectedDetails.to_year : ''}</div>
+                <div className='player-jersey'>Jersey:{selectedDetails ? selectedDetails.jersey : ''}</div>
+                <div className='player-all-star'>All Star Appearance: {selectedDetails ? selectedDetails.all_star_appearances : ''}</div>
+                <div className='player-1-conn'>#First Teammates: {firstConn ? firstConn : 0}</div>
+                <div className='player-2-conn'>#Second Teammates: {secondConn ? secondConn : 0}</div>
+                <div className='player-3-conn'>#Third Teammates: {thirdConn ? thirdConn : 0}</div>
+              </div>
+              <div className='player-radar-chart'>
+                <Radar {...radarConfig} />
+              </div>
             </div>
           </div>
           <div className='player-salary-season'>
