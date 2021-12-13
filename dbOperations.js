@@ -285,7 +285,7 @@ const playerSalaryPerSeason = async(db, id) => {
 // Team Page
 const teamSearch = async(db, params) =>{
   const query = `
-              SELECT full_name, abbreviation, nickname, city, state, year_founded, arena, owner, d_league_affiliation
+              SELECT id as team_id, full_name, abbreviation, nickname, city, state, year_founded, arena, owner, d_league_affiliation
               FROM Team
               WHERE (abbreviation = '${params.name}' OR full_name LIKE '%${params.name}%') AND
                     year_founded >= ${params.year_founded_min} AND year_founded <= ${params.year_founded_max} AND
@@ -303,6 +303,69 @@ const teamSearch = async(db, params) =>{
   }
 }
 
+const teamSalaryPerWin = async(db, name) =>{
+  const query =`
+          SELECT TW.season, TW.win_count, TS.salary, TS.salary / TW.win_count AS salary_per_win
+          FROM (SELECT season, COUNT(game_id) AS win_count
+                FROM Game
+                WHERE (team_name_home = '${name}' AND wl_home = 'W') OR 
+                      (team_name_away = '${name}' AND wl_away = 'W')
+                GROUP BY season) AS TW
+              JOIN (SELECT * FROM (SELECT CAST(LEFT(slugSeason, 4) AS SIGNED) AS season, nameTeam AS team_name, SUM(amountSalary) AS salary FROM Player_Bios
+                                  WHERE nameTable = 'Salaries' AND 
+                                        nameTeam IS NOT NULL
+                                  GROUP BY season, nameTeam
+                                  UNION
+                                  SELECT 2020 AS season, full_name AS team_name, salary_20_21 AS salary
+                                  FROM Team) AS Salary
+                    WHERE team_name = '${name}') AS TS
+              ON TW.season = TS.season
+          ORDER BY season;
+          `;
+  try {
+    const [rows] = await db.execute(query);
+    return rows;
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+    throw new Error('Error executing the query');
+  }
+}
+
+const teamPlayerFlow10 = async(db, name) =>{
+  const query = `
+        SELECT player_id.id AS id, full_name, nameTeam AS nextTeam, prevTeam, transferYear,
+          CASE
+              WHEN prevTeam LIKE '${name}' THEN 'Out'
+              ELSE 'In' END AS status
+        FROM
+        (SELECT id, full_name
+        FROM Player) AS player_id
+        JOIN
+        (SELECT id, nameTeam, prevTeam,
+              SUBSTRING(slugSeason, 1, 4) AS transferYear
+        FROM
+          (SELECT id, nameTeam, slugSeason,
+                  IFNULL(lag(nameTeam) OVER (PARTITION BY id), 'N/A') AS prevTeam
+          FROM Player_Bios
+          WHERE nameTable = 'Salaries')
+          AS T
+        WHERE nameTeam != prevTeam) AS wholeRecords
+        ON player_id.id = wholeRecords.id
+        WHERE
+        prevTeam LIKE '${name}' OR
+          nameTeam LIKE '${name}'
+        ORDER BY transferYear desc
+        limit 10
+        ;
+                `
+  try {
+    const [rows] = await db.execute(query);
+    return rows;
+  } catch (err) {
+    console.log(`Error: ${err.message}`);
+    throw new Error('Error executing the query');
+  }
+}
 
 
 
@@ -317,4 +380,6 @@ module.exports = {
   playerNetwork,
   playerSalaryPerSeason,
   teamSearch,
+  teamSalaryPerWin,
+  teamPlayerFlow10
 };

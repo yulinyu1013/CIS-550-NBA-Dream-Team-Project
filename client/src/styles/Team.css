@@ -84,14 +84,24 @@
 }
 
 .team-result-container >*{
-  background-color: gray;
+  /* background-color: gray; */
   margin: 10px 0;
   width: 100%;
 }
 
 .team-output-form{
-  height: 40%;
+  /* height: 40%; */
   width: 100%;
+}
+
+.team-player_flow_of_year{
+  /* height: 60%;
+  width: 100%; */
+}
+
+.team-player_flow_of_year:nth-child(2) > canvas {
+  width: min-content;
+  height: min-content;
 }
 
 

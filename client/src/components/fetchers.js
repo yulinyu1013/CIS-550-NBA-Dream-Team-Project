@@ -19,3 +19,5 @@ export const getPlayerSalary = async(id) => axios.get(`${baseURL}/player/salary`
 
 // Team Page
 export const teamSearch = async(params) => axios.get(`${baseURL}/team/search`, {params: params});
+export const getTeamSalaryPerWin = async(name) => axios.get(`${baseURL}/team/salary_per_win`, {params: {name: name}});
+export const getTeamPlayerFlow = async(name) => axios.get(`${baseURL}/team/player_flow_recent`, {params: {name: name}});

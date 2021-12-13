@@ -132,7 +132,7 @@ const playerSalaryPerSeasonHandler = async(req, res) => {
 // Team Page
 const teamSearchHandler = async(req, res) => {
   const name = req.query.name ? req.query.name : "";
-  const year_founded_min = req.query.year_founded_min ? req.query.year_founded_min : 1960;
+  const year_founded_min = req.query.year_founded_min ? req.query.year_founded_min : 1946;
   const year_founded_max = req.query.year_founded_max ? req.query.year_founded_max : 2021;
   const state = req.query.state ? req.query.state : "";
   const city = req.query.city ? req.query.city : "";
@@ -150,8 +150,29 @@ const teamSearchHandler = async(req, res) => {
 
 }
 
+const teamSalaryPerWinHandler = async(req, res) => { 
+  const {name} = req.query;
+  const cleaned = name.split('%20')[0] + ' ' + name.split('%20')[1];
+  console.log(cleaned);
+  try {
+    const result = await lib.teamSalaryPerWin(db, cleaned);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(404).json({ error: 'not found' });
+  }
+}
 
-
+const teamPlayerFlow10Handler = async(req, res) => { 
+  const {name} = req.query;
+  const cleaned = name.split('%20')[0] + ' ' + name.split('%20')[1];
+  console.log(cleaned);
+  try {
+    const result = await lib.teamPlayerFlow10(db, cleaned);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(404).json({ error: 'not found' });
+  }
+}
 
 
 module.exports = {
@@ -164,4 +185,6 @@ module.exports = {
   playNetworkHandler,
   playerSalaryPerSeasonHandler,
   teamSearchHandler,
+  teamSalaryPerWinHandler,
+  teamPlayerFlow10Handler,
 };
