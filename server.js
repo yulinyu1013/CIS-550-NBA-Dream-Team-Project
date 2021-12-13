@@ -40,7 +40,6 @@ webapp.use((_req, res) => {
   res.status(404);
 });
 
-
 // Start server
 const port = process.env.PORT || 8080;
 webapp.listen(port, () => {
