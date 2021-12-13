@@ -77,6 +77,10 @@ const gameSearchHandler = async(req, res) => {
 
 const gameTeamStatsHandler = async(req, res) => {
   try {
+    if(!req.query.name){
+      res.status(404).json({error: 'missing team name'});
+      return;
+    }
     const results = await lib.gameTeamStats(db,req.query.name);
     res.status(200).json(results);
   } catch (err) {
@@ -89,14 +93,14 @@ const playerSearchHandler = async(req, res) => {
   const first_name = req.query.first_name ? req.query.first_name : "";
   const last_name = req.query.last_name ? req.query.last_name : "";
   const player_slug = req.query.player_slug ? req.query.player_slug : "";
-  const min_salary = req.query.min_salary ? Math.max(0,req.query.min_salary) : 0;
+  const min_salary = req.query.min_salary ?  req.query.min_salary : 0;
   const pts_low = req.query.pts_low ? req.query.pts_low : 0;
   const pts_high = req.query.pts_high? req.query.pts_high : 50;
   const reb_low = req.query.reb_low ? req.query.reb_low : 0;
   const reb_high = req.query.reb_high? req.query.reb_high : 30;
   const ast_low = req.query.ast_low ? req.query.ast_low : 0;
   const ast_high = req.query.ast_high? req.query.ast_high : 30;
-  const position = req.query.position==='All' ? '' : req.query.position;
+  const position = req.query.position==='All' || !req.query.position ? '' : req.query.position;
   
   const params = {first_name, last_name, player_slug, min_salary, pts_low, pts_high, reb_low, reb_high, ast_low, ast_high, position};
 
@@ -110,10 +114,16 @@ const playerSearchHandler = async(req, res) => {
 }
 
 const playNetworkHandler = async(req, res) => { 
+  if(!req.query.full_name){
+    res.status(404).json({error: 'missing name'});
+    return;
+  }
+
   const {full_name} = req.query;
-  const cleaned = full_name.split('%20')[0] + ' ' + full_name.split('%20')[1];
+  const cleaned = full_name.split('%20').join(' ');
   console.log(cleaned);
   try {
+
     const result = await lib.playerNetwork(db, cleaned);
     res.status(200).json(result);
   } catch (err) {
@@ -122,6 +132,12 @@ const playNetworkHandler = async(req, res) => {
 }
 
 const playerSalaryPerSeasonHandler = async(req, res) => {
+
+  if(!req.query.id){
+    res.status(404).json({error: 'missing id'});
+    return;
+  }
+
   try {
     const result = await lib.playerSalaryPerSeason(db, req.query.id);
     res.status(200).json(result);
@@ -152,8 +168,13 @@ const teamSearchHandler = async(req, res) => {
 }
 
 const teamSalaryPerWinHandler = async(req, res) => { 
+  if(!req.query.name){
+    res.status(404).json({error: 'missing name'});
+    return;
+  }
+
   const {name} = req.query;
-  const cleaned = name.split('%20')[0] + ' ' + name.split('%20')[1];
+  const cleaned = name.split('%20').join(' ');
   console.log(cleaned);
   try {
     const result = await lib.teamSalaryPerWin(db, cleaned);
@@ -163,9 +184,13 @@ const teamSalaryPerWinHandler = async(req, res) => {
   }
 }
 
-const teamPlayerFlow10Handler = async(req, res) => { 
+const teamPlayerFlow10Handler = async(req, res) => {
+  if(!req.query.name){
+    res.status(404).json({error: 'missing name'});
+    return;
+  } 
   const {name} = req.query;
-  const cleaned = name.split('%20')[0] + ' ' + name.split('%20')[1];
+  const cleaned = name.split('%20').join(' ');
   console.log(cleaned);
   try {
     const result = await lib.teamPlayerFlow10(db, cleaned);

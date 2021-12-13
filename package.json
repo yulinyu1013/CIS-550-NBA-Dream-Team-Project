@@ -9,7 +9,6 @@
   "scripts": {
     "test": "jest --coverage --forceExit",
     "start": "node server.js",
-    "lint": "eslint ./server.js ./routes.js ./dbOperations.js --ext .js,.ts,.jsx,.tsx --ignore-pattern *.test.js --ignore-pattern *.test.ts",
     "build": "npm install && cd ./client && npm install && npm run build"
   },
   "repository": {
@@ -27,10 +26,17 @@
       "client"
     ]
   },
+  "env": {
+    "jest": true
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mysql2": "^2.3.3"
+    "jest": "^27.4.5",
+    "knex": "^0.95.14",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "supertest": "^6.1.6"
   }
 }

@@ -36,8 +36,6 @@ webapp.get('/team/search', routes.teamSearchHandler);
 webapp.get('/team/salary_per_win', routes.teamSalaryPerWinHandler);
 webapp.get('/team/player_flow_recent', routes.teamPlayerFlow10Handler);
 
-
-
 webapp.use((_req, res) => {
   res.status(404);
 });

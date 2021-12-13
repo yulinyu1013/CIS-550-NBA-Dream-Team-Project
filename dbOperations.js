@@ -12,7 +12,6 @@ const connect = async () => {
     console.log(`Connected to database: ${connection.connection.config.database}`);
     return connection;
   } catch (err) {
-    console.error(err.message);
     throw err;
   }
 };
@@ -56,8 +55,7 @@ const gameOfTheSeason = async(db) => {
     const row = await db.execute(query);
     return row[0][0];
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
@@ -82,8 +80,7 @@ const allTimeTop10 = async(db) => {
       const [rows] = await db.execute(query);
       return rows;
     } catch (err) {
-      console.log(`Error: ${err.message}`);
-      throw new Error('Error executing the query');
+      throw new Error(`Error executing the query: ${err.message}`);
     }
 }
 
@@ -136,8 +133,7 @@ const allTimeTop10 = async(db) => {
       const row = await db.execute(query);
       return row[0][0];
     } catch (err) {
-      console.log(`Error: ${err.message}`);
-      throw new Error('Error executing the query');
+      throw new Error(`Error executing the query: ${err.message}`);
     }
  }
 
@@ -150,7 +146,7 @@ const allTimeTop10 = async(db) => {
    team_abbreviation_away, team_name_away, pts_away, reb_away, ast_away, 
    fgm_away, ftm_away, fta_away, ft_pct_away, pf_away
     FROM Game
-    WHERE (team_abbreviation_home = '${params.home}' OR team_name_home LIKE '%${params.home}%') AND
+    WHERE (team_abbreviation_home LIKE '%${params.home}%' OR team_name_home LIKE '%${params.home}%') AND
       (team_abbreviation_away = '${params.away}' OR team_name_away LIKE '%${params.away}%') AND
       game_date >= '${params.min_date}' AND game_date <= '${params.max_date}' AND
       pts_home >= ${params.pts_home_low} AND pts_home <= ${params.pts_home_high} AND
@@ -164,8 +160,7 @@ const allTimeTop10 = async(db) => {
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
  }
 
@@ -191,8 +186,7 @@ const gameTeamStats = async(db, name) =>{
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
@@ -219,8 +213,7 @@ const playerSearch = async(db, params) => {
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
@@ -269,8 +262,7 @@ const playerNetwork = async(db, name) =>{
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
@@ -295,8 +287,7 @@ const playerSalaryPerSeason = async(db, id) => {
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
@@ -305,7 +296,7 @@ const teamSearch = async(db, params) =>{
   const query = `
               SELECT id as team_id, full_name, abbreviation, nickname, city, state, year_founded, arena, owner, d_league_affiliation
               FROM Team
-              WHERE (abbreviation = '${params.name}' OR full_name LIKE '%${params.name}%') AND
+              WHERE (abbreviation = '%${params.name}%' OR full_name LIKE '%${params.name}%') AND
                     year_founded >= ${params.year_founded_min} AND year_founded <= ${params.year_founded_max} AND
                     city LIKE '%${params.city}%' AND
                     state LIKE '%${params.state}%' AND
@@ -316,8 +307,7 @@ const teamSearch = async(db, params) =>{
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
@@ -344,8 +334,7 @@ const teamSalaryPerWin = async(db, name) =>{
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
@@ -379,8 +368,7 @@ const teamPlayerFlow10 = async(db, name) =>{
     const [rows] = await db.execute(query);
     return rows;
   } catch (err) {
-    console.log(`Error: ${err.message}`);
-    throw new Error('Error executing the query');
+    throw new Error(`Error executing the query: ${err.message}`);
   }
 }
 
