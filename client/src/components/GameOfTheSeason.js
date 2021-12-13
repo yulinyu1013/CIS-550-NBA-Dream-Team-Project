@@ -144,6 +144,17 @@ const GameOfTheSeason = () => {
                 <h5 style={{color: '#17408B'}}>{gots.pf_home}</h5>
             </Col >
         </Row>
+        <Row gutter='30' align='middle' justify='center'>
+            <Col span={9} style={{ textAlign: 'left' }}>
+                <h5 style={{color: '#C9082A'}}>${parseInt(gots.team_salary_away).toLocaleString("en-US")}</h5>
+            </Col >
+            <Col span={6} style={{ textAlign: 'center' }}>
+                <h5>Salary</h5>
+            </Col >
+            <Col span={9} style={{ textAlign: 'right' }}>
+                <h5 style={{color: '#17408B'}}>${parseInt(gots.team_salary_home).toLocaleString("en-US")}</h5>
+            </Col >
+        </Row>
     </CardBody>
   </Card>
   );

@@ -26,7 +26,7 @@ const Team = () => {
   const [result, setResult] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState(window.location.search ? window.location.search.substring(1).split('&')[0].split('=')[1] : 1610612737);
   const [selectedDetails, setSelectedDetials] = useState();
-  const [abbrevation, setAbbreviation]= useState(window.location.search ? window.location.search.substring(1).split('&')[1].split('=')[1] : 'ATL');
+  const [abbreviation, setAbbreviation]= useState(window.location.search ? window.location.search.substring(1).split('&')[1].split('=')[1] : 'ATL');
   const [full_name, set_full_name]= useState(window.location.search ? window.location.search.substring(1).split('&')[2].split('=')[1] : 'Atlanta%20Hawks');
   const [teamPerformance, setTeamPerformace] = useState();
   const [salary_per_win, set_salary_per_win] = useState();
@@ -40,7 +40,7 @@ const Team = () => {
       setResult(res.data);
     })
 
-    getGameTeamStats(abbrevation).then((res)=>{
+    getGameTeamStats(abbreviation).then((res)=>{
       // console.log(res.data);
       const data = [
         {
@@ -73,8 +73,17 @@ const Team = () => {
     })
 
     getTeamSalaryPerWin(full_name).then((res) =>{
-      // console.log(res.data);
-      set_salary_per_win(res.data);
+      console.log(res.data);
+      const data = res.data;
+      const cleaned = data.map((a)=>{
+        return {
+          season: a.season,
+          win_count: a.win_count,
+          salary: parseInt(a.salary),
+          salary_per_win: parseInt(a.salary_per_win),
+        }
+      })
+      set_salary_per_win(cleaned);
     })
 
     getTeamPlayerFlow(full_name).then((res) =>{
@@ -95,7 +104,7 @@ const Team = () => {
               {
                 text: 'Previous Team',
                 value: a.prevTeam,
-                icon: 'https://gw.alipayobjects.com/zos/antfincdn/iFh9X011qd/7797962c-04b6-4d67-9143-e9d05f9778bf.png',
+                // icon: 'https://gw.alipayobjects.com/zos/antfincdn/iFh9X011qd/7797962c-04b6-4d67-9143-e9d05f9778bf.png',
               },
             ],
           },
@@ -119,7 +128,7 @@ const Team = () => {
             {
               // text: cleaned,
               // value: cleaned,
-              // icon: 'https://gw.alipayobjects.com/zos/antfincdn/iFh9X011qd/7797962c-04b6-4d67-9143-e9d05f9778bf.png',
+              icon: `https://d2p3bygnnzw9w3.cloudfront.net/req/202112021/tlogo/bbr/${abbreviation}.png`,
             },
           ],
         },
@@ -132,7 +141,7 @@ const Team = () => {
              title: a.full_name,
              items: [
                {
-                icon: 'https://gw.alipayobjects.com/zos/antfincdn/iFh9X011qd/7797962c-04b6-4d67-9143-e9d05f9778bf.png',
+                // icon: 'https://gw.alipayobjects.com/zos/antfincdn/iFh9X011qd/7797962c-04b6-4d67-9143-e9d05f9778bf.png',
                  text: 'Next Team',
                  value: a.nextTeam,
                },
@@ -175,6 +184,7 @@ const bidConfig =  {
   data: teamPerformance? teamPerformance:[],
   xField: 'value',
   yField: ['Home', 'Away'],
+  legend: false,
   xAxis: {
     position: 'bottom',
   },
@@ -194,8 +204,16 @@ const dualConfig = {
   data: salary_per_win ? [salary_per_win, salary_per_win] : [[],[]],
   xField: 'season',
   yField: ['win_count', 'salary_per_win'],
-  limitInPlot: false,
-  padding: [10, 20, 80, 30],
+  yAxis: {
+    salary_per_win:{
+      max: 5000000,
+      label: {
+        formatter: (v) => `$${Math.round(v).toLocaleString("en-US")}`,
+      },
+    }
+  },
+  limitInPlot: true,
+  padding: [25, 40, 60, 30],
   slider: {},
   meta: {
     season: {
@@ -218,9 +236,6 @@ const dualConfig = {
 
 const flowConfig = {
   data: playerFlow ? playerFlow : {edges:[], nodes:[]},
-  // layout:{
-  //   center: [-1,-1],
-  // },
   fitCenter:false,
   nodeCfg: {
     size: [300, 30],
@@ -232,14 +247,16 @@ const flowConfig = {
       style: (cfg, group, type) => {
         const styles = {
           icon: {
-            width: 12,
-            height: 12,
+            width: 60,
+            height: 60,
           },
           value: {
-            fill: '#f00',
+            fill: '#C9082A',
+            fontSize: 13,
           },
           text: {
-            fill: '#aaa',
+            fill: '#17408B',
+            fontSize: 13,
           },
         };
         return styles[type];
@@ -257,7 +274,7 @@ const flowConfig = {
       },
       style: {
         fill: '#000',
-        fontSize: 15,
+        fontSize: 18,
       },
     },
     style: {
@@ -313,7 +330,7 @@ const flowConfig = {
               </FormGroup>
               <FormGroup style={{ width: '20vw', margin: '10px auto'}}>
                   <label>Year Founded</label>
-                  <Slider min={1946} max={2021} range defaultValue={[1960, 2021]}  onChange={(value) => {set_year_founded_min(value[0]); set_year_founded_max(value[1])}}/>
+                  <Slider min={1946} max={2021} range defaultValue={[1946, 2021]}  onChange={(value) => {set_year_founded_min(value[0]); set_year_founded_max(value[1])}}/>
               </FormGroup>
               <FormGroup style={{ width: '20vw', margin: '10px auto' }}>
                   <label>State</label>
@@ -340,7 +357,9 @@ const flowConfig = {
           <div className='team-output-form'>
             <div className='team-search-output-title'>Search Results</div>
             <Table dataSource={result} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}
-            onRow={(record, rowIndex) => { return {onClick: e => {getTeamDetails(record)},};}}>
+            onRow={(record, rowIndex) => { return {onClick: e => {getTeamDetails(record)},};}}
+            rowClassName={(record, rowIndex) => (rowIndex % 2 === 0 ? 'team-row-even' : 'team-row-odd')}
+            >
               <Column title="Name" dataIndex="full_name" key="full_name" />
               <Column title="Abbreviation" dataIndex="abbreviation" key="abbreviation"/>
               <Column title="Nickname" dataIndex="nickname" key="nickname"/>
@@ -352,7 +371,7 @@ const flowConfig = {
             </Table>
           </div>
           <div className='team-performance'>
-            <div className='team-performance-title'>Team History Performances</div>
+            <div className='team-performance-title'>Team History Performances (As Home VS Away)</div>
             <BidirectionalBar {...bidConfig} />
           </div>
           <div className='team-salary-per-win'>

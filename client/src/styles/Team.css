@@ -58,7 +58,7 @@
 }
 
 .team-search-title{
-  font-size: x-large;
+  font-size: xx-large;
   font-weight: bold;
   margin-left: 20px;
   margin-top: 20px;
@@ -69,6 +69,10 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
+.team-search-field label{
+  font-weight:500;
+  font-size: 15px;
+}
 
 
 /* ================= */
@@ -100,5 +104,39 @@
   height: min-content;
 }
 
+.team-search-output-title, .team-performance-title, .team-salary-per-win-title, .team-player_flow_of_year-title{
+  width: 100%;
+  font-size: xx-large;
+  margin-left: 5px;
+  font-weight: 400;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.team-output-form .ant-table-thead > tr >th{
+  color: white;
+  background: #4468ab !important;
+}
+
+.team-row-even{
+  font-weight: 400;
+}
+
+.team-row-odd{
+  /* background-color: #e39ca9; */
+  background-color: #8099d012;
+  font-weight: 400;
+}
 
 
+.team-performance{
+  /* height: 60%; */
+  margin-bottom: 50px;
+}
+
+
+.team-player_flow_of_year{
+  background: rgba(252, 251, 250, 0.5);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 10px 10px;
+}

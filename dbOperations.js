@@ -26,14 +26,37 @@ const connect = async () => {
 // Home Page
 const gameOfTheSeason = async(db) => {
   const query = `
-                SELECT team_abbreviation_home, team_name_home, game_date, pts_home, reb_home, ast_home, 
-                fgm_home, ftm_home, fta_home, ft_pct_home, pf_home, 
-                team_abbreviation_away, team_name_away, pts_away, reb_away, ast_away, 
-                fgm_away, ftm_away, fta_away, ft_pct_away, pf_away, game_date
-                FROM Game 
-                WHERE team_abbreviation_home = 'LAL' AND 
-                      team_abbreviation_away = 'LAC' AND 
-                      game_date = '2020-12-22';
+              WITH HOME_SALARY(team_name_home, team_salary_home) AS (
+                SELECT G.team_name_home, SUM(PB.amountSalary)
+                FROM Game G
+                    JOIN Player P ON G.team_id_home = P.team_id
+                    JOIN Player_Bios PB on P.id = PB.id
+                WHERE to_year >= 2020 AND
+                      LEFT(slugSeason, 4) = '2020' AND
+                      team_abbreviation_home = 'LAL' AND
+                      team_abbreviation_away = 'LAC' AND
+                      game_date = '2020-12-22'
+                GROUP BY G.team_name_home, team_abbreviation_home, team_abbreviation_away, game_date
+            ),
+                AWAY_SALARY(team_name_away, team_salary_away) AS (
+                SELECT G.team_name_away, SUM(PB.amountSalary)
+                FROM Game G
+                    JOIN Player P ON G.team_id_away = P.team_id
+                    JOIN Player_Bios PB on P.id = PB.id
+                WHERE to_year >= 2020 AND
+                      LEFT(slugSeason, 4) = '2020' AND
+                      team_abbreviation_home = 'LAL' AND
+                      team_abbreviation_away = 'LAC' AND
+                      game_date = '2020-12-22'
+                GROUP BY G.team_name_home, team_abbreviation_home, team_abbreviation_away, game_date
+                )
+            SELECT team_abbreviation_home, G.team_name_home, game_date, pts_home, reb_home, ast_home, fgm_home, ftm_home, fta_home, ft_pct_home, pf_home, team_abbreviation_away, G.team_name_away, pts_away, reb_away, ast_away, fgm_away, ftm_away, fta_away, ft_pct_away, pf_away, team_salary_home, team_salary_away
+            FROM Game G
+                JOIN HOME_SALARY HS ON G.team_name_home = HS.team_name_home
+                JOIN AWAY_SALARY AWS ON G.team_name_away = AWS.team_name_away
+            WHERE team_abbreviation_home = 'LAL' AND
+                  team_abbreviation_away = 'LAC' AND
+                  game_date = '2020-12-22';
                 `;
   try {
     const row = await db.execute(query);
@@ -182,14 +205,15 @@ const gameTeamStats = async(db, name) =>{
 // Player Page
 const playerSearch = async(db, params) => {
   const query = `
-        SELECT P.id AS player_id, full_name, player_slug, birth_date, school, country, last_affiliation, height, weight, season_exp, jersey, position, roster_status, games_played_current_season_flag, team_id, player_code, from_year, to_year, draft_year, draft_round, draft_number, 
+        SELECT P.id AS player_id, T.full_name AS team, P.full_name AS full_name, player_slug, birth_date, school, country, last_affiliation, height, weight, season_exp, jersey, position, roster_status, games_played_current_season_flag, team_id, player_code, from_year, to_year, draft_year, draft_round, draft_number, 
         ROUND(pts,3) AS pts, ROUND(ast,3) AS ast, ROUND(reb,3) AS reb, all_star_appearances, salary
         FROM Player P
             JOIN (SELECT id, MAX(amountSalary) AS salary
                   FROM Player_Bios
                   WHERE nameTable = 'Salaries'
                   GROUP BY id) S ON P.id = S.id
-        WHERE full_name LIKE '${params.first_name}%' AND full_name LIKE '%${params.last_name}' AND
+            JOIN (SELECT id, full_name FROM Team) T ON P.team_id = T.id
+        WHERE P.full_name LIKE '${params.first_name}%' AND P.full_name LIKE '%${params.last_name}' AND
               player_slug LIKE '%${params.player_slug}%' AND
               salary >= ${params.min_salary}  AND
               pts >= ${params.pts_low} AND pts <= ${params.pts_high} AND
@@ -333,7 +357,7 @@ const teamSalaryPerWin = async(db, name) =>{
 
 const teamPlayerFlow10 = async(db, name) =>{
   const query = `
-        SELECT player_id.id AS id, full_name, nameTeam AS nextTeam, prevTeam, transferYear,
+      SELECT player_id.id AS id, full_name, nameTeam AS nextTeam, prevTeam, transferYear,
           CASE
               WHEN prevTeam LIKE '${name}' THEN 'Out'
               ELSE 'In' END AS status
@@ -355,8 +379,7 @@ const teamPlayerFlow10 = async(db, name) =>{
         prevTeam LIKE '${name}' OR
           nameTeam LIKE '${name}'
         ORDER BY transferYear desc
-        limit 10
-        ;
+        limit 10;
                 `
   try {
     const [rows] = await db.execute(query);

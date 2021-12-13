@@ -150,7 +150,7 @@ const Player = () => {
     seriesField: 'type',
     yAxis: {
       label: {
-        formatter: (v) => `$${Math.round(v)}`,
+        formatter: (v) => `$${Math.round(v).toLocaleString("en-US")}`,
       },
     },
     legend: {
@@ -232,13 +232,13 @@ const Player = () => {
             onRow={(record, rowIndex) => { return {onClick: e => {getPlayerDetails(record)},};}}
             rowClassName={(record, rowIndex) => (rowIndex % 2 === 0 ? 'player-row-even' : 'player-row-odd')}
             >
-              <Column title="Name" dataIndex="full_name" key="full_name" />
+              <Column title="Name" dataIndex="full_name" key="full_name" sorter= {(a, b) => a.full_name.localeCompare(b.full_name)}/>
               <Column title="Slug" dataIndex="player_slug" key="player_slug"/>
-              <Column title="Team" dataIndex="last_affiliation" key="last_affiliation"/>
-              <Column title="Postion" dataIndex="position" key="position"/>
-              <Column title="Points" dataIndex="pts" key="pts"/>
-              <Column title="Assists" dataIndex="ast" key="ast"/>
-              <Column title="Rebounds" dataIndex="reb" key="reb"/>
+              <Column title="Team" dataIndex="team" key="team"/>
+              <Column title="Postion" dataIndex="position" key="position" sorter= {(a, b) => a.position.localeCompare(b.position)}/>
+              <Column title="Points" dataIndex="pts" key="pts" sorter= {(a, b) => a.pts - b.pts}/>
+              <Column title="Assists" dataIndex="ast" key="ast" sorter= {(a, b) => a.ast - b.ast}/>
+              <Column title="Rebounds" dataIndex="reb" key="reb" sorter= {(a, b) => a.reb - b.reb}/>
             </Table>
           </div>
           <div className='player-detail-vis'>
@@ -249,7 +249,7 @@ const Player = () => {
                 <div className='player-name'>{selectedDetails ? selectedDetails.full_name : ''}</div>
               </div>
               <div className='player-info'>
-                <div className='player-team'>Team: {selectedDetails ? selectedDetails.last_affiliation : ''}</div>
+                <div className='player-team'>Team: {selectedDetails ? selectedDetails.team : ''}</div>
                 <div className='player-position'>Position: {selectedDetails ? selectedDetails.position : ''}</div>
                 <div className='player-height'>Height: {selectedDetails ? selectedDetails.height : ''}</div>
                 <div className='player-weight'>Weight: {selectedDetails ? selectedDetails.weight : ''}</div>
