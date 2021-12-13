@@ -1,12 +1,6 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-// "rds_host": "mysql.cbxetj19oidu.us-east-2.rds.amazonaws.com",
-//     "rds_port": "3306",
-//     "rds_user": "admin",
-//     "rds_password" : "Cis550Fall!",
-//     "rds_db": "NBA"
-
 const connect = async () => {
   try {
     const connection = await mysql.createConnection({
