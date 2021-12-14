@@ -48,9 +48,7 @@ const Game = () => {
   const [funfact, setFunfact] = useState({});
 
   useEffect(() =>{
-    getFunFact().then((res) => {
-      setFunfact(res.data);
-    });
+ 
     const params ={home,away,min_date,max_date,
       pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
       pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
@@ -58,8 +56,17 @@ const Game = () => {
 
     gameSearch(params).then((res)=>{
       setResult(res.data);
-      console.log(res.data.filter(a => a.game_id===parseInt(selectedGameId))[0]);
-      setSelectedDetials(res.data.filter(a => a.game_id===parseInt(selectedGameId))[0]);
+      const data = res.data.filter(a => a.game_id===parseInt(selectedGameId))[0];
+      setSelectedDetials(data);
+
+      const funFactParams = {home_team: data.team_name_home, away_team: data.team_name_away};
+      
+      getFunFact(funFactParams).then((res) => {
+        console.log(res.data);
+        setFunfact(res.data);
+      });
+
+
     });
 
     getGameTeamStats(homeTeam).then((res)=>{
@@ -92,7 +99,6 @@ const Game = () => {
         },
       ];
       setHomeTeamStats(dataHome);
-
     })
 
     getGameTeamStats(awayTeam).then((res)=>{
@@ -146,8 +152,6 @@ const Game = () => {
   const getGameDetails = (record) => {
     window.location = `/game?id=${record.game_id}&home=${record.team_abbreviation_home}&away=${record.team_abbreviation_away}`;
   }
-
-
 
   const config = (data) => {
     return {
@@ -236,8 +240,8 @@ const Game = () => {
               The home team <span className='fun-lal'>{funfact.home_team}</span>, 
               which was founded in {funfact.home_team_founded} won <span className='fun-lal'>{funfact.home_win}</span> out of <span className='fun-lal'>{funfact.total_match}</span> matches against <span className='fun-lac'>{funfact.away_team}</span>, 
               which was founded in {funfact.away_team_founded}. 
-              The most valuable player in <span className='fun-lal'>{funfact.home_team} </span> history is <span className='fun-lal'>{funfact.home_mvp}</span> who earned <span className='fun-lal'>${funfact.home_mvp_salary}</span> for a season 
-              while the most valuable player in <span className='fun-lac'>{funfact.away_team} </span>history is <span className='fun-lac'>{funfact.away_mvp}</span> who earned <span className='fun-lac'>${funfact.away_mvp_salary}</span> for a season.
+              The most valuable player in <span className='fun-lal'>{funfact.home_team} </span> history is <span className='fun-lal'>{funfact.home_mvp}</span> who earned <span className='fun-lal'>${parseInt(funfact.home_mvp_salary).toLocaleString("en-US")}</span> for a season 
+              while the most valuable player in <span className='fun-lac'>{funfact.away_team} </span>history is <span className='fun-lac'>{funfact.away_mvp}</span> who earned <span className='fun-lac'>${parseInt(funfact.away_mvp_salary).toLocaleString("en-US")}</span> for a season.
             </div>
           </div>
           <div className="game-output-form">

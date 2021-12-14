@@ -30,8 +30,14 @@ const allTimeTop10Handler = async(req, res) => {
 // Game Page
 
 const funFactHandler = async(req, res) => {
+  if(!req.query){
+    res.status(404).json({error: 'missing names'});
+    return;
+  }
+  console.log('fun fact api...');
+  const {home_team, away_team} = req.query;
   try {
-    const result = await lib.funFact(db);
+    const result = await lib.funFact(db, {home_team, away_team});
     res.status(200).json(result);
   } catch (err) {
     res.status(404).json({ error: 'not found' });
@@ -40,8 +46,6 @@ const funFactHandler = async(req, res) => {
 }
 
 const gameSearchHandler = async(req, res) => {
-  console.log('connect to search api...');
-  console.log(req.url);
   const home = req.query.home ? req.query.home : "";
   const away = req.query.away ? req.query.away : "";
   const min_date = req.query.min_date ? req.query.min_date : "1946-11-26";
@@ -65,7 +69,7 @@ const gameSearchHandler = async(req, res) => {
     pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
     pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
   };
-  console.log(params);
+  // console.log(params);
   try {
     const results = await lib.gameSearch(db,params);
     res.status(200).json(results);
@@ -157,7 +161,7 @@ const teamSearchHandler = async(req, res) => {
   const owner = req.query.owner ? req.query.owner : "";
 
   const params = {name,year_founded_min,year_founded_max,state,city,arena,owner};
-  console.log(params);
+  // console.log(params);
   try {
     const results = await lib.teamSearch(db,params);
     res.status(200).json(results);

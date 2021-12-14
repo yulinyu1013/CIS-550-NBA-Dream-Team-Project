@@ -8,7 +8,7 @@ export const getGameOfTheSeason = async() => axios.get(`${baseURL}/home/game_of_
 export const getAllTimeTop10 = async() => axios.get(`${baseURL}/home/nba_all_time`);
 
 // Game Page
-export const getFunFact = async() => axios.get(`${baseURL}/game/fun_fact`);
+export const getFunFact = async(params) => axios.get(`${baseURL}/game/fun_fact`, {params: params});
 export const gameSearch = async(params) => axios.get(`${baseURL}/game/search`, {params: params});
 export const getGameTeamStats = async(teamName) => axios.get(`${baseURL}/game/team_stats`, {params: {name: teamName}});
 

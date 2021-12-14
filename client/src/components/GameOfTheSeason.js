@@ -47,7 +47,7 @@ const GameOfTheSeason = () => {
                         <img src='https://d2p3bygnnzw9w3.cloudfront.net/req/202112021/tlogo/bbr/LAL.png' alt=''/>
                         </div>
                         <div class="flip-box-back-lal">
-                            <h2>LAC</h2>
+                            <h2>LAL</h2>
                         </div>
                     </div>
                 </div>

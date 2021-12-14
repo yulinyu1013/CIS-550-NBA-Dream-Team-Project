@@ -46,22 +46,24 @@ describe('Home Page', ()=>{
 describe('Game Page', ()=>{
 
   it('fun fact', async() => {
-    await request(webapp).get('/game/fun_fact').then((res)=>{
+    await request(webapp).get('/game/fun_fact').query({ home_team: 'New Jersey Nets', away_team: 'Cleveland Cavaliers' })
+    .then((res)=>{
       // console.log(JSON.parse(res.text));
-      expect(JSON.parse(res.text).home_team).toBe('Los Angeles Lakers');
-      expect(JSON.parse(res.text).away_team).toBe('Los Angeles Clippers');
+      expect(JSON.parse(res.text).home_team).toBe('New Jersey Nets');
+      expect(JSON.parse(res.text).away_team).toBe('Cleveland Cavaliers');
     })
   })
 
   it('game search', async() => {
     await request(webapp).get('/game/search').then((res)=>{
-      expect(JSON.parse(res.text).length).toBe(44110);
+      expect(JSON.parse(res.text).length).toBe(60688);
     })
   })
 
   it('game search with some condition', async() => {
-    await request(webapp).get('/game/search?home=LAL&away=LAC&min_date=2020-01-01').then((res)=>{
-      expect(JSON.parse(res.text).length).toBe(2);
+    await request(webapp).get('/game/search').query({home:'LAL'})
+    .then((res)=>{
+      expect(JSON.parse(res.text).length).toBe(2472);
     })
   })
 
@@ -86,7 +88,7 @@ describe('Player Page', ()=>{
 
   it('player search', async() => {
     await request(webapp).get('/player/search').then((res)=>{
-      expect(JSON.parse(res.text).length).toBe(1818);
+      expect(JSON.parse(res.text).length).toBe(1880);
     })
   })
 
@@ -184,7 +186,6 @@ describe('Team Page', ()=>{
       expect(JSON.parse(res.text).length).toBe(10);
     })
   })
-
 })
 
 test('webapp.use', ()=>{

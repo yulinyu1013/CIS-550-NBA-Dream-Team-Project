@@ -46,9 +46,7 @@ const Player = () => {
     // console.log(res.data);
     console.log(selectedPlayerId);
     setResult(res.data);
-    // console.log(res.data.filter(a => a.player_id===parseInt(selectedPlayerId))[0]);
     const selected = res.data.filter(a => a.player_id===parseInt(selectedPlayerId))[0];
-    // console.log(selected)
     setSelectedDetials(selected);
     
     const radar = [
@@ -80,10 +78,10 @@ const Player = () => {
       console.log(res.data);
       const data = res.data;
       const playerS = data.map((a) => {
-       return {season: a.slugSeason, type:'Player Salary', value: a.salaryFromPlayer};
+       return {season: a.slugSeason, type:'Player Salary', value: parseFloat(a.salaryFromPlayer)};
       });
       const teamAvg = data.map((a) => {
-        return {season: a.slugSeason, type:'Team Average Salary', value: a.salaryAcrossTeam};
+        return {season: a.slugSeason, type:'Team Average Salary', value: parseFloat(a.salaryAcrossTeam)};
        });
       const cleaned = playerS.concat(teamAvg);
       // console.log(cleaned);
@@ -255,7 +253,7 @@ const Player = () => {
                 <div className='player-weight'>Weight: {selectedDetails ? selectedDetails.weight : ''}</div>
                 <div className='player-prior-school'>Prior School: {selectedDetails ? selectedDetails.school : ''}</div>
                 <div className='player-from-to-year'>Seasons: {selectedDetails ? selectedDetails.from_year : ''}-{selectedDetails ? selectedDetails.to_year : ''}</div>
-                <div className='player-jersey'>Jersey:{selectedDetails ? selectedDetails.jersey : ''}</div>
+                <div className='player-jersey'>Jersey: {selectedDetails ? selectedDetails.jersey : ''}</div>
                 <div className='player-all-star'>All Star Appearance: {selectedDetails ? selectedDetails.all_star_appearances : ''}</div>
                 <div className='player-1-conn'>#First Teammates: {firstConn ? firstConn : 0}</div>
                 <div className='player-2-conn'>#Second Teammates: {secondConn ? secondConn : 0}</div>

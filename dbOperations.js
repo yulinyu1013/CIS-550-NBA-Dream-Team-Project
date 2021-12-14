@@ -85,19 +85,21 @@ const allTimeTop10 = async(db) => {
 }
 
 // Game Page
- const funFact = async(db) => {
+ const funFact = async(db, params) => {
+  console.log('fun fact db...');
+  console.log(params);
   const query = `
                 WITH HOME_TEAM(team_name, year_founded) AS (
-                  SELECT full_name, year_founded FROM Team WHERE full_name = 'Los Angeles Lakers'
+                  SELECT full_name, year_founded FROM Team WHERE full_name = '${params.home_team}'
               ),
               AWAY_TEAM(team_name, year_founded) AS (
-                  SELECT full_name, year_founded FROM Team WHERE full_name = 'Los Angeles Clippers'
+                  SELECT full_name, year_founded FROM Team WHERE full_name = '${params.away_team}'
               ),
               HOME_TEAM_MVP(team_name, player_name, salary) AS (
                   SELECT nameTeam, namePlayerBREF, MAX(amountSalary)
                   FROM Player_Bios
                   WHERE nameTable = 'Salaries' AND
-                        nameTeam = 'Los Angeles Lakers' AND
+                        nameTeam = '${params.home_team}' AND
                         amountSalary IS NOT NULL
                   GROUP BY nameTeam, namePlayerBREF
                   ORDER BY MAX(amountSalary) DESC
@@ -107,27 +109,27 @@ const allTimeTop10 = async(db) => {
                   SELECT nameTeam, namePlayerBREF, MAX(amountSalary)
                   FROM Player_Bios
                   WHERE nameTable = 'Salaries' AND
-                        nameTeam = 'Los Angeles Clippers' AND
+                        nameTeam = '${params.away_team}' AND
                         amountSalary IS NOT NULL
                   GROUP BY nameTeam, namePlayerBREF
                   ORDER BY MAX(amountSalary) DESC
                   LIMIT 1
               )
-              SELECT 'Los Angeles Lakers' AS home_team, 'Los Angeles Clippers' AS away_team,
-                    HT.year_founded AS home_team_founded, AT.year_founded AS away_team_founded,
-                    SUM(LAL_win) AS home_win, COUNT(LAL_win) - SUM(LAL_win) AS away_win, COUNT(LAL_win) AS total_match,
+              SELECT W2.*, HT.year_founded AS home_team_founded, AT.year_founded AS away_team_founded,
                     HTM.player_name AS home_mvp, HTM.salary AS home_mvp_salary,
                     ATM.player_name AS away_mvp, ATM.salary AS away_mvp_salary
-              FROM (SELECT team_name_home, team_name_away,
-                          IF(team_name_home = 'Los Angeles Lakers' AND wl_home = 'W' OR
-                              team_name_away = 'Los Angeles Lakers' AND wl_away = 'W', 1, 0) AS LAL_win
-                    FROM Game
-                    WHERE (team_name_home = 'Los Angeles Lakers' AND team_name_away = 'Los Angeles Clippers') OR
-                          (team_name_home = 'Los Angeles Clippers' AND team_name_away = 'Los Angeles Lakers')) AS W
-              LEFT JOIN HOME_TEAM HT ON W.team_name_home = HT.team_name
-              LEFT JOIN AWAY_TEAM AT ON W.team_name_away = AT.team_name
-              LEFT JOIN HOME_TEAM_MVP HTM ON W.team_name_home = HTM.team_name
-              LEFT JOIN AWAY_TEAM_MVP ATM ON W.team_name_away = ATM.team_name;
+              FROM (SELECT '${params.home_team}' AS home_team, '${params.away_team}' AS away_team,
+                          SUM(LAL_win) AS home_win, COUNT(LAL_win) - SUM(LAL_win) AS away_win, COUNT(LAL_win) AS total_match
+                    FROM (SELECT team_name_home, team_name_away,
+                                IF(team_name_home = '${params.home_team}' AND wl_home = 'W' OR
+                                    team_name_away = '${params.home_team}' AND wl_away = 'W', 1, 0) AS LAL_win
+                          FROM Game
+                          WHERE (team_name_home = '${params.home_team}' AND team_name_away = '${params.away_team}') OR
+                                (team_name_home = '${params.away_team}' AND team_name_away = '${params.home_team}')) AS W) AS W2
+              LEFT JOIN HOME_TEAM HT ON W2.home_team = HT.team_name
+              LEFT JOIN AWAY_TEAM AT ON W2.away_team = AT.team_name
+              LEFT JOIN HOME_TEAM_MVP HTM ON W2.home_team = HTM.team_name
+              LEFT JOIN AWAY_TEAM_MVP ATM ON W2.away_team = ATM.team_name;
               `;
     try {
       const row = await db.execute(query);
@@ -147,7 +149,7 @@ const allTimeTop10 = async(db) => {
    fgm_away, ftm_away, fta_away, ft_pct_away, pf_away
     FROM Game
     WHERE (team_abbreviation_home LIKE '%${params.home}%' OR team_name_home LIKE '%${params.home}%') AND
-      (team_abbreviation_away = '${params.away}' OR team_name_away LIKE '%${params.away}%') AND
+      (team_abbreviation_away = '%${params.away}%' OR team_name_away LIKE '%${params.away}%') AND
       game_date >= '${params.min_date}' AND game_date <= '${params.max_date}' AND
       pts_home >= ${params.pts_home_low} AND pts_home <= ${params.pts_home_high} AND
       pts_away >= ${params.pts_away_low} AND pts_away <= ${params.pts_away_high} AND
@@ -165,6 +167,8 @@ const allTimeTop10 = async(db) => {
  }
 
 const gameTeamStats = async(db, name) =>{
+  console.log('team stats');
+  console.log(name);
   const query = `
                 SELECT 'Home' as game, COUNT(*) count,
                 COUNT(CASE WHEN wl_home = 'W' THEN 1 END ) win,
@@ -340,30 +344,50 @@ const teamSalaryPerWin = async(db, name) =>{
 
 const teamPlayerFlow10 = async(db, name) =>{
   const query = `
-      SELECT player_id.id AS id, full_name, nameTeam AS nextTeam, prevTeam, transferYear,
-          CASE
-              WHEN prevTeam LIKE '${name}' THEN 'Out'
-              ELSE 'In' END AS status
-        FROM
-        (SELECT id, full_name
-        FROM Player) AS player_id
-        JOIN
-        (SELECT id, nameTeam, prevTeam,
-              SUBSTRING(slugSeason, 1, 4) AS transferYear
-        FROM
-          (SELECT id, nameTeam, slugSeason,
-                  IFNULL(lag(nameTeam) OVER (PARTITION BY id), 'N/A') AS prevTeam
-          FROM Player_Bios
-          WHERE nameTable = 'Salaries')
-          AS T
-        WHERE nameTeam != prevTeam) AS wholeRecords
-        ON player_id.id = wholeRecords.id
-        WHERE
-        prevTeam LIKE '${name}' OR
-          nameTeam LIKE '${name}'
-        ORDER BY transferYear desc
-        limit 10;
-                `
+                WITH TEAM_LOGO(full_name, logo_url) AS(
+                  SELECT full_name, logo_url FROM Team
+              )
+              SELECT id,
+                    Player_flow.full_name AS player_full_name,
+                    nextTeam,
+                    prevTeam,
+                    transferYear,
+                    status,
+                    T1.logo_url AS nextTeamLogoURL,
+                    T2.logo_url AS prevTeamLogoURL
+              FROM
+              (SELECT player_id.id AS id,
+                      full_name,
+                      nameTeam AS nextTeam,
+                      prevTeam,
+                      transferYear,
+                    CASE
+                          WHEN prevTeam LIKE '${name}' THEN 'Out'
+                          ELSE 'In' END AS status
+              FROM
+                  (SELECT id, full_name
+                    FROM Player) AS player_id
+                  JOIN
+                  (SELECT id, nameTeam, prevTeam,
+                        SUBSTRING(slugSeason, 1, 4) AS transferYear
+                  FROM
+                      (SELECT id, nameTeam, slugSeason,
+                            IFNULL(lag(nameTeam) OVER (PARTITION BY id), 'N/A') AS prevTeam
+                      FROM Player_Bios
+                      WHERE nameTable = 'Salaries')
+                      AS T
+                  WHERE nameTeam != prevTeam) AS wholeRecords
+                  ON player_id.id = wholeRecords.id
+              WHERE transferYear LIKE '2019' AND
+                    (prevTeam LIKE '${name}' OR
+                      nameTeam LIKE '${name}')
+                  ) AS Player_flow
+              JOIN TEAM_LOGO AS T1
+              ON nextTeam = T1.full_name
+              JOIN TEAM_LOGO AS T2
+              ON prevTeam = T2.full_name
+              LIMIT 10;
+              `
   try {
     const [rows] = await db.execute(query);
     return rows;

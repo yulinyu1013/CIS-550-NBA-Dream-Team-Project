@@ -91,20 +91,18 @@ const Team = () => {
       const data = res.data;
       const inTeam = data.filter(a => a.status==='In');
       const outTeam = data.filter(a => a.status==='Out');
-      // console.log(inTeam);
-      // console.log(outTeam);
 
-      const cleaned = full_name.split('%20')[0] + ' ' + full_name.split('%20')[1];
+      const cleaned = full_name.split('%20').join(' ');
       const inNodes = inTeam.map((a) => {
        return {
-          id: a.full_name,
+          id: a.player_full_name,
           value: {
-            title: a.full_name,
+            title: a.player_full_name,
             items: [
               {
                 text: 'Previous Team',
                 value: a.prevTeam,
-                // icon: 'https://gw.alipayobjects.com/zos/antfincdn/iFh9X011qd/7797962c-04b6-4d67-9143-e9d05f9778bf.png',
+                icon: a.prevTeamLogoURL,
               },
             ],
           },
@@ -113,7 +111,7 @@ const Team = () => {
 
       const inEdges = inTeam.map((a) => {
         return  {
-          source: a.full_name,
+          source: a.player_full_name,
           target: cleaned,
           // value: 'to',
         }
@@ -136,14 +134,14 @@ const Team = () => {
 
       const outNodes = outTeam.map((a) => {
         return {
-           id: a.full_name,
+           id: a.player_full_name,
            value: {
-             title: a.full_name,
+             title: a.player_full_name,
              items: [
                {
-                // icon: 'https://gw.alipayobjects.com/zos/antfincdn/iFh9X011qd/7797962c-04b6-4d67-9143-e9d05f9778bf.png',
                  text: 'Next Team',
                  value: a.nextTeam,
+                 icon: a.nextTeamLogoURL,
                },
              ],
            },
@@ -153,7 +151,7 @@ const Team = () => {
        const outEdges = outTeam.map((a) => {
         return  {
           source: cleaned,
-          target: a.full_name,
+          target: a.player_full_name,
         }
        });
 
@@ -237,8 +235,10 @@ const dualConfig = {
 const flowConfig = {
   data: playerFlow ? playerFlow : {edges:[], nodes:[]},
   fitCenter:false,
+  fitView: true,
+  center:[0,0],
   nodeCfg: {
-    size: [300, 30],
+    size: [400, 30],
     items: {
       containerStyle: {
         fill: '#fff',
@@ -295,7 +295,7 @@ const flowConfig = {
       const stroke = edge.target === full_name.split('%20')[0] + ' ' + full_name.split('%20')[1] ? '#C9082A':'#17408B';
       return {
         stroke,
-        // lineWidth: Math.random() * 10 + 1,
+        lineWidth: Math.random() * 10 + 1,
         strokeOpacity: 0.5,
       };
     },
@@ -360,18 +360,18 @@ const flowConfig = {
             onRow={(record, rowIndex) => { return {onClick: e => {getTeamDetails(record)},};}}
             rowClassName={(record, rowIndex) => (rowIndex % 2 === 0 ? 'team-row-even' : 'team-row-odd')}
             >
-              <Column title="Name" dataIndex="full_name" key="full_name" />
+              <Column title="Name" dataIndex="full_name" key="full_name" sorter= {(a, b) => a.full_name.localeCompare(b.full_name)}/>
               <Column title="Abbreviation" dataIndex="abbreviation" key="abbreviation"/>
               <Column title="Nickname" dataIndex="nickname" key="nickname"/>
               <Column title="City" dataIndex="city" key="city"/>
               <Column title="State" dataIndex="state" key="state"/>
-              <Column title="Year Founded" dataIndex="year_founded" key="year_founded"/>
+              <Column title="Year Founded" dataIndex="year_founded" key="year_founded" sorter={(a, b) => a.year_founded - b.year_founded}/>
               <Column title="Owner" dataIndex="owner" key="owner"/>
               <Column title="D League" dataIndex="d_league_affiliation" key="d_league_affiliation"/>
             </Table>
           </div>
           <div className='team-performance'>
-            <div className='team-performance-title'>Team History Performances (As Home VS Away)</div>
+            <div className='team-performance-title'>{full_name.split('%20').join(' ')} - Team History Performances of (As Home VS Away)</div>
             <BidirectionalBar {...bidConfig} />
           </div>
           <div className='team-salary-per-win'>

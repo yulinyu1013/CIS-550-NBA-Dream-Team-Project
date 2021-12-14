@@ -34,11 +34,6 @@ const NavBar = () => {
               Team
             </NavLink>
           </NavItem>
-          <NavItem>
-            <NavLink inactive  href="/dreamteam" >
-              Draft Your Dream Team
-            </NavLink>
-          </NavItem>
         </Nav>
   </Navbar>
         )

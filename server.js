@@ -7,6 +7,7 @@ const webapp = express();
 webapp.use(cors());
 
 webapp.use(express.json());
+
 webapp.use(
   express.urlencoded({
     extended: true,
