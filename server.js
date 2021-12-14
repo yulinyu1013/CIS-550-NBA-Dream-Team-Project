@@ -14,6 +14,7 @@ webapp.use(
   }),
 );
 
+
 webapp.use(express.static(path.join(__dirname, './client/build')));
 
 const routes = require('./routes');
@@ -36,6 +37,11 @@ webapp.get('/player/salary', routes.playerSalaryPerSeasonHandler);
 webapp.get('/team/search', routes.teamSearchHandler);
 webapp.get('/team/salary_per_win', routes.teamSalaryPerWinHandler);
 webapp.get('/team/player_flow_recent', routes.teamPlayerFlow10Handler);
+
+
+webapp.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './client/build/index.html'));
+});
 
 webapp.use((_req, res) => {
   res.status(404);
