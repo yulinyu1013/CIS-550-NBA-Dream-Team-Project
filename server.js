@@ -14,7 +14,7 @@ webapp.use(
   }),
 );
 
-
+webapp.use(path.join(__dirname, './uploads'), express.static(path.join(__dirname, './uploads')));
 webapp.use(express.static(path.join(__dirname, './client/build')));
 
 const routes = require('./routes');
