@@ -1,11 +1,8 @@
 # CIS-550-NBA-Dream-Team-Project
 
-
-
-
 #### Contributers: Yizheng Wang, Zijing Wu, Yulin Yu, Zihao Zhang
 #### The app is deployed at: https://league-pass.herokuapp.com/
-
+<img src="./game.png" width="450" height="auto"> <img src="./home.png" width="450" height="auto">
 
 ## Introduction
 The National Basketball Association (NBA) is a professional basketball league in North America. The league is composed of 30 teams (29 in the United States and 1 in Canada) and hosts 82 games every season that lasts for a year. It is the premier men's professional basketball league in the world. In recent years, the data collection and analysis on NBA games, teams and players performance were more and more popular with the advanced technologies that could record every detail in each game. Therefore, we decided to bring our enthusiasm in basketball and NBA to the database and information system field to present this application.
