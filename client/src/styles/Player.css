@@ -15,7 +15,6 @@
 
 .player-main-page > * {
   border-radius: 10px;
-  /* background-color: lightblue; */
 }
 
 
@@ -38,7 +37,6 @@
 .ant-slider-handle {
   border-color: rgb(193, 71, 71) !important;
   background-color: brown !important;
-
   --antd-wave-shadow-color: red
 }
 
@@ -50,7 +48,6 @@
 
 .ant-slider-step{
   color: red;
-
 }
 
 .btn-primary {
@@ -87,8 +84,7 @@
   padding: 0 5%;
 }
 
-.player-result-container >*{
-  /* background-color: gray; */
+.player-result-container >* {
   margin: 10px 0;
   width: 100%;
 }
@@ -103,35 +99,29 @@
 }
 
 .player-row-odd{
-  /* background-color: #e39ca9; */
   background-color: #8099d012;
   font-weight: 400;
 }
 
 .player-detail-vis{
-  /* height: 40%; */
   width: 100%;
   background: rgba(252, 251, 250, 0.5);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   padding: 10px 10px;
   margin-bottom: 50px;
 }
+
 .player-detail-vis>*{
   height: fit-content;
   width: 100%;
 }
+
 .player-info-container{
   display: flex;
   justify-content: space-between;
 }
 
-
-/* .player-salary-season{
-  width: ;
-} */
-
 .player-profile{
-  /* height: 100%; */
   height: 90%;
   width: 20%;
   font-size: x-large;
@@ -163,7 +153,6 @@
   margin-left: 10px;
   font-weight: 400;
 }
-
 
 .player-detail-title{
   width: 20%;

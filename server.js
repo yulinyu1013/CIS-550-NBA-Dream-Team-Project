@@ -43,6 +43,7 @@ webapp.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './client/build/index.html'));
 });
 
+// prevent unwarranted endpoint access
 webapp.use((_req, res) => {
   res.status(404);
 });

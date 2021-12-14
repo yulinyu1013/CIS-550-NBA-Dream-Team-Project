@@ -34,7 +34,6 @@ describe('Home Page', ()=>{
 
   it('gets the nba all time', async()=>{
     await request(webapp).get('/home/nba_all_time').then((res)=>{
-      // console.log(JSON.parse(res.text));
       expect(JSON.parse(res.text)[0].player).toBe('Bradley Beal');
       expect(JSON.parse(res.text)[10].player).toBe('James Harden');
       expect(JSON.parse(res.text)[20].player).toBe('Wilt Chamberlain');
@@ -48,7 +47,6 @@ describe('Game Page', ()=>{
   it('fun fact', async() => {
     await request(webapp).get('/game/fun_fact').query({ home_team: 'New Jersey Nets', away_team: 'Cleveland Cavaliers' })
     .then((res)=>{
-      // console.log(JSON.parse(res.text));
       expect(JSON.parse(res.text).home_team).toBe('New Jersey Nets');
       expect(JSON.parse(res.text).away_team).toBe('Cleveland Cavaliers');
     })

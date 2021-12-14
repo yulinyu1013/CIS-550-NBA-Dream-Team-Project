@@ -17,7 +17,6 @@ const { Column, ColumnGroup } = Table;
 
 const Game = () => {
 
-  // game search
   const [home, setHome] = useState();
   const [away, setAway] = useState();
   const [min_date, set_min_date] = useState();
@@ -47,6 +46,7 @@ const Game = () => {
   const [awayTeamStats, setAwayTeamStats] = useState([]);
   const [funfact, setFunfact] = useState({});
 
+  // render page
   useEffect(() =>{
  
     const params ={home,away,min_date,max_date,
@@ -54,6 +54,7 @@ const Game = () => {
       pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
     };
 
+    // get search result
     gameSearch(params).then((res)=>{
       setResult(res.data);
       const data = res.data.filter(a => a.game_id===parseInt(selectedGameId))[0];
@@ -66,9 +67,9 @@ const Game = () => {
         setFunfact(res.data);
       });
 
-
     });
 
+    // get history performances for home team
     getGameTeamStats(homeTeam).then((res)=>{
       console.log(res.data);
       const dataHome = [
@@ -100,7 +101,7 @@ const Game = () => {
       ];
       setHomeTeamStats(dataHome);
     })
-
+    // get history performances for away team
     getGameTeamStats(awayTeam).then((res)=>{
       console.log(res.data);
       const dataAway = [
@@ -142,17 +143,19 @@ const Game = () => {
       pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
       pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
     };
-    console.log(params);
+
     gameSearch(params).then((res) => {
       console.log(res.data);
       setResult(res.data);
     })
   }
 
+  // update selected game
   const getGameDetails = (record) => {
     window.location = `/game?id=${record.game_id}&home=${record.team_abbreviation_home}&away=${record.team_abbreviation_away}`;
   }
 
+  // bidirectial graph config
   const config = (data) => {
     return {
     data: data?data:[],
@@ -246,7 +249,6 @@ const Game = () => {
           </div>
           <div className="game-output-form">
             <div className='game-search-output-title'>Search Results</div>
-            {/* <Divider /> */}
             <Table dataSource={result} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}
             onRow={(record, rowIndex) => { 
               return {onClick: e => {getGameDetails(record)}};}}

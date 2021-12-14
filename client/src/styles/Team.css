@@ -15,7 +15,6 @@
 
 .team-main-page > * {
   border-radius: 10px;
-  /* background-color: lightblue; */
 }
 
 
@@ -88,13 +87,11 @@
 }
 
 .team-result-container >*{
-  /* background-color: gray; */
   margin: 10px 0;
   width: 100%;
 }
 
 .team-output-form{
-  /* height: 40%; */
   width: 100%;
 }
 
@@ -123,14 +120,12 @@
 }
 
 .team-row-odd{
-  /* background-color: #e39ca9; */
   background-color: #8099d012;
   font-weight: 400;
 }
 
 
 .team-performance{
-  /* height: 60%; */
   margin-bottom: 50px;
 }
 

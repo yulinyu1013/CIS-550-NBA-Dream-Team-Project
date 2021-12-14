@@ -3,7 +3,6 @@
   height: 950px;
 }
 
-
 .game-main-page {
   margin-top: 80px;
   height: 100%;
@@ -15,9 +14,7 @@
 
 .game-main-page > * {
   border-radius: 10px;
-  /* background-color: lightblue; */
 }
-
 
 .ant-slider-rail{
   color: #c9082a;
@@ -38,7 +35,6 @@
 .ant-slider-handle {
   border-color: rgb(193, 71, 71) !important;
   background-color: brown !important;
-
   --antd-wave-shadow-color: red
 }
 
@@ -50,7 +46,6 @@
 
 .ant-slider-step{
   color: red;
-
 }
 
 .btn-primary {
@@ -86,10 +81,10 @@
   padding: 0 5%;
 }
 .game-result-container >*{
-  /* background-color: gray; */
   margin: 10px 0;
   width: 100%;
 }
+
 .fun-fact {
   margin-top: 50px;
   margin-bottom: 30px;
@@ -122,13 +117,11 @@
   font-weight: bold;
 }
 
-
 .game-row-even{
   font-weight: 400;
 }
 
 .game-row-odd{
-  /* background-color: #e39ca9; */
   background-color: #8099d012;
   font-weight: 400;
 }

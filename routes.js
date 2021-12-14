@@ -2,10 +2,9 @@ const lib = require('./dbOperations');
 
 // connect to db
 let db;
-
 const connectToDb = async () => { db = await lib.connect(); };
-
 connectToDb();
+
 
 // Home Page
 
@@ -69,14 +68,13 @@ const gameSearchHandler = async(req, res) => {
     pts_home_low,pts_home_high,reb_home_low,reb_home_high,ast_home_low,ast_home_high,
     pts_away_low,pts_away_high,reb_away_low,reb_away_high,ast_away_low,ast_away_high
   };
-  // console.log(params);
+
   try {
     const results = await lib.gameSearch(db,params);
     res.status(200).json(results);
   } catch (err) {
     res.status(404).json({ error: err.message });
   }
-
 }
 
 const gameTeamStatsHandler = async(req, res) => {
@@ -92,7 +90,9 @@ const gameTeamStatsHandler = async(req, res) => {
   }
 }
 
+
 // Player Page
+
 const playerSearchHandler = async(req, res) => { 
   const first_name = req.query.first_name ? req.query.first_name : "";
   const last_name = req.query.last_name ? req.query.last_name : "";
@@ -108,7 +108,6 @@ const playerSearchHandler = async(req, res) => {
   
   const params = {first_name, last_name, player_slug, min_salary, pts_low, pts_high, reb_low, reb_high, ast_low, ast_high, position};
 
-  // console.log(params);
   try {
     const results = await lib.playerSearch(db,params);
     res.status(200).json(results);
@@ -150,7 +149,9 @@ const playerSalaryPerSeasonHandler = async(req, res) => {
   }
 }
 
+
 // Team Page
+
 const teamSearchHandler = async(req, res) => {
   const name = req.query.name ? req.query.name : "";
   const year_founded_min = req.query.year_founded_min ? req.query.year_founded_min : 1946;
@@ -161,7 +162,7 @@ const teamSearchHandler = async(req, res) => {
   const owner = req.query.owner ? req.query.owner : "";
 
   const params = {name,year_founded_min,year_founded_max,state,city,arena,owner};
-  // console.log(params);
+
   try {
     const results = await lib.teamSearch(db,params);
     res.status(200).json(results);
@@ -179,7 +180,7 @@ const teamSalaryPerWinHandler = async(req, res) => {
 
   const {name} = req.query;
   const cleaned = name.split('%20').join(' ');
-  console.log(cleaned);
+
   try {
     const result = await lib.teamSalaryPerWin(db, cleaned);
     res.status(200).json(result);
@@ -193,9 +194,10 @@ const teamPlayerFlow10Handler = async(req, res) => {
     res.status(404).json({error: 'missing name'});
     return;
   } 
+
   const {name} = req.query;
   const cleaned = name.split('%20').join(' ');
-  console.log(cleaned);
+
   try {
     const result = await lib.teamPlayerFlow10(db, cleaned);
     res.status(200).json(result);

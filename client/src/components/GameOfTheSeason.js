@@ -13,6 +13,7 @@ const GameOfTheSeason = () => {
     const [gots,setGots] = useState({});
 
     useEffect(() => {
+        // get game of the season
         getGameOfTheSeason().then((res)=>{
             setGots(res.data);
         })

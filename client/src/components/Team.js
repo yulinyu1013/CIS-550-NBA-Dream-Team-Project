@@ -32,16 +32,17 @@ const Team = () => {
   const [salary_per_win, set_salary_per_win] = useState();
   const [playerFlow, setPlayerFlow] = useState();
 
+  // render page
   useEffect(()=>{
     const params = {name, year_founded_min,year_founded_max,state,city,arena,owner};
     
+    // get search results
     teamSearch(params).then((res) => {
-      // console.log(res.data);
       setResult(res.data);
     })
 
+    // get detailed stats for the selected game
     getGameTeamStats(abbreviation).then((res)=>{
-      // console.log(res.data);
       const data = [
         {
           value: '#Games (Hundreds)',
@@ -73,7 +74,6 @@ const Team = () => {
     })
 
     getTeamSalaryPerWin(full_name).then((res) =>{
-      console.log(res.data);
       const data = res.data;
       const cleaned = data.map((a)=>{
         return {
@@ -87,14 +87,13 @@ const Team = () => {
     })
 
     getTeamPlayerFlow(full_name).then((res) =>{
-      console.log(res.data);
       const data = res.data;
       const inTeam = data.filter(a => a.status==='In');
       const outTeam = data.filter(a => a.status==='Out');
-
       const cleaned = full_name.split('%20').join(' ');
+
       const inNodes = inTeam.map((a) => {
-       return {
+      return {
           id: a.player_full_name,
           value: {
             title: a.player_full_name,
@@ -113,19 +112,15 @@ const Team = () => {
         return  {
           source: a.player_full_name,
           target: cleaned,
-          // value: 'to',
         }
        });
       
-
       const currNode = {
         id: cleaned,
         value: {
           title: cleaned,
           items: [
             {
-              // text: cleaned,
-              // value: cleaned,
               icon: `https://d2p3bygnnzw9w3.cloudfront.net/req/202112021/tlogo/bbr/${abbreviation}.png`,
             },
           ],
@@ -166,9 +161,7 @@ const Team = () => {
   const submitSearch = (e) => {
     e.preventDefault();
     const params = {name, year_founded_min,year_founded_max,state,city,arena,owner};
-    console.log(params);
     teamSearch(params).then((res) => {
-      console.log(res.data);
       setResult(res.data);
     })
   }
@@ -230,7 +223,6 @@ const dualConfig = {
     },
   ],
 };
-
 
 const flowConfig = {
   data: playerFlow ? playerFlow : {edges:[], nodes:[]},

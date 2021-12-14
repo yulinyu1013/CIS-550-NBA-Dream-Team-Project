@@ -1,16 +1,14 @@
-// import React from 'react';
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { Bar } from '@ant-design/charts';
 import '../styles/AllTimeTop10.css'
 import { getAllTimeTop10 } from './fetchers';
 
 const AllTimeTop10 = () => {
+
   const [pts,setPts] = useState([]);
   const [ast,setAst] = useState([]);
   const [reb,setReb] = useState([]);
   
-
   useEffect(() => {
     getAllTimeTop10().then((res)=>{
       console.log(res.data.filter(a => a.category==="pts"));
@@ -20,29 +18,20 @@ const AllTimeTop10 = () => {
     })
   },[])
 
-  const color1 =["#c9082a",
-    "#d58291",
-    "#bd6b7a",
-    ]
+  const color1 =["#c9082a","#d58291", "#bd6b7a"]
 
-    const color2 =[
-    "#17408b",
-    "#274d93",
-    "#36599a",
-    "#4666a2",
-    "#5572a9"
-    ]
+  const color2 =["#17408b", "#274d93","#36599a", "#4666a2", "#5572a9"]
 
+  // barchart config
   const config = (data, color) => {
     return {
-    data: data,
-    xField: 'value',
-    yField: 'player',
-    seriesField: 'value',
-    padding: "auto",
-    legend: false,
-    color: color,
-    // fontSize: 24,
+      data: data,
+      xField: 'value',
+      yField: 'player',
+      seriesField: 'value',
+      padding: "auto",
+      legend: false,
+      color: color,
     }
   };
 

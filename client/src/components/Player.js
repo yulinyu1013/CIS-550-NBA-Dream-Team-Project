@@ -13,7 +13,7 @@ import dummy from '../styles/dummy.png';
 const { Column } = Table;
 
 const Player = () => {
-  // player search
+
   const [first_name, set_first_name] = useState();
   const [last_name, set_last_name] = useState();
   const [player_slug, set_player_slug] = useState();
@@ -37,15 +37,17 @@ const Player = () => {
   const [salaryData, setSalaryData] = useState();
   const [imgUrl, setImgUrl] = useState(dummy);
   
+  // render page
   useEffect(() =>{
     const params = { first_name, last_name, player_slug, min_salary,
       pts_low,pts_high,reb_low,reb_high,ast_low,ast_high,position
     };
 
    playerSearch(params).then((res)=>{
-    // console.log(res.data);
-    console.log(selectedPlayerId);
+    //  get search result
     setResult(res.data);
+
+    // get result for the selected record
     const selected = res.data.filter(a => a.player_id===parseInt(selectedPlayerId))[0];
     setSelectedDetials(selected);
     
@@ -67,7 +69,6 @@ const Player = () => {
     setRadarData(radar);
     
     getPlayerNetwork(full_name).then((res) => {
-      console.log(res.data);
       setFirstConn(res.data[0]?  res.data[0].numPlayer: 0);
       setSecondConn(res.data[1] ? res.data[1].numPlayer: 0);
       setThirdConn(res.data[2] ? res.data[2].numPlayer: 0);
@@ -75,7 +76,6 @@ const Player = () => {
     });
 
     getPlayerSalary(selectedPlayerId).then((res) => {
-      console.log(res.data);
       const data = res.data;
       const playerS = data.map((a) => {
        return {season: a.slugSeason, type:'Player Salary', value: parseFloat(a.salaryFromPlayer)};
@@ -84,12 +84,10 @@ const Player = () => {
         return {season: a.slugSeason, type:'Team Average Salary', value: parseFloat(a.salaryAcrossTeam)};
        });
       const cleaned = playerS.concat(teamAvg);
-      // console.log(cleaned);
       setSalaryData(cleaned);
     });
 
     getHeadShot(selectedPlayerId).then((res) =>{
-      console.log(res.data);
       setImgUrl(`https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/${selectedPlayerId}.png`);
     })
   },[])
@@ -99,9 +97,7 @@ const Player = () => {
     const params = { first_name, last_name, player_slug, min_salary,
       pts_low,pts_high,reb_low,reb_high,ast_low,ast_high,position
     };
-    console.log(params);
     playerSearch(params).then((res) => {
-      console.log(res.data);
       setResult(res.data);
     })
   }
@@ -109,7 +105,6 @@ const Player = () => {
   const getPlayerDetails = (record) => {
     window.location = `/player?id=${record.player_id}&name=${record.full_name}`;
   }
-
 
   const radarConfig = {
     data: radarData ? radarData.map((d) => ({ ...d, star: d.star })): [],
